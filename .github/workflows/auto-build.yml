@@ -14,18 +14,11 @@ jobs:
     runs-on: ubuntu-22.04
     container: texlive/texlive:latest
     steps:
-    - name: Install jq
+    - name: Install required tools
       run: |
         apt-get update -y
-        apt-get install -y jq
-    - name: Install inkscape
-      run: |
-        apt-get update -y
-        apt-get install -y inkscape
-    - name: Install sagemath
-      run: |
-        apt-get update -y
-        apt-get install -y sagemath
+        apt-get install -y jq sagemath sagetex inkscape
+        sage -v
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
