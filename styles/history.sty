@@ -1,0 +1,125 @@
+%
+% Copyright (c) 2022 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+\typeout{Rene Hampölz, 2022}
+
+% ========================================
+%              Do not change!             
+% ========================================
+% Make configurations in the main.sty file
+
+\usepackage{xparse,graphicx,calc}                                   %
+\usepackage{booktabs}                                               %
+\usepackage{ltablex}                                                %
+\usepackage{environ}                                                %
+\usepackage{ifplatform}                                             %
+
+% run script to generate latex code from git history
+\ifwindows
+    \immediate\write18{call ./scripts/history.bat timeline "\HistoryTimelineTitle" "\HistoryTimelineLimit" "\HistoryIgnoreCommits" > ./out/historytl.tmp}
+    \immediate\write18{call ./scripts/history.bat table "\HistoryTableTitle" "\HistoryTableLimit" "\HistoryIgnoreCommits" > ./out/historytab.tmp}
+\else\iflinux
+    \immediate\write18{/bin/bash -c './scripts/history.sh timeline "\HistoryTimelineTitle" "\HistoryTimelineLimit" "\HistoryIgnoreCommits"' > ./out/historytl.tmp}
+    \immediate\write18{/bin/bash -c './scripts/history.sh table "\HistoryTableTitle" "\HistoryTableLimit" "\HistoryIgnoreCommits"' > ./out/historytab.tmp}
+\else
+    \immediate\write18{echo History-Timeline: Your platform is not supported yet. > ./out/historytl.tmp}
+    \immediate\write18{echo History-Table: Your platform is not supported yet. > ./out/historytab.tmp}
+\fi\fi
+
+% usage: \IncludeHistoryTimeline
+%
+\newcommand\IncludeHistoryTimeline{\input{./out/historytl.tmp}}     % include generated code
+
+% usage: \IncludeHistoryTable
+%
+\newcommand\IncludeHistoryTable{\input{./out/historytab.tmp}}       % include generated code
+
+\newlength\inlineheight                                             % ┝ variables required by \inlineimg
+\newlength\inlinedepth                                              % |
+
+% usage: \inlineimg{<Image-Path>}
+%
+\newcommand\inlineimg[1]{%                                          % ┝ insert picture into text line
+    \settototalheight\inlineheight{Xygp}%                           % |
+    \settodepth\inlinedepth{Xygp}%                                  % |
+    \raisebox{-\inlinedepth}                                        % |
+        {\includegraphics[height=\inlineheight]{#1}}%               % |
+}                                                                   % |
+
+% usage: \commit{<NegativeSpace>}{<SHA>}[<SHA-Url>]{<Author>}[<Author-Url>][<Author-Image>]{<Message>}
+%
+\NewDocumentCommand{\commit}{mmomoom}{%                             % ┝ visualize a git commit
+    \parbox[c]{\dimexpr\textwidth-#1\relax}{                        % |
+        \vspace{7pt}                                                % |
+        \raggedright                                                % |
+        \IfNoValueTF{#3}{#2}{\href{#3}{\underline{#2}}}             % |
+        \IfNoValueTF{#6}{by}{by \inlineimg{./out/images/#6}}        % |
+        \IfNoValueTF{#5}{#4}{\href{#5}{\underline{\smash{#4}}}}     % |
+        \vspace*{3pt}\newline                                       % |
+        #7                                                          % |
+        \\[7pt]                                                     % |
+    }%                                                              % |
+}                                                                   % |
+
+% usage: \HistoryTlEntry{<Date>}{<SHA>}[<SHA-Url>]{<Author>}[<Author-Url>][<Author-Image>]{<Message>}
+%
+\NewDocumentCommand{\HistoryTlEntry}{mmomoom}{%                     % ┝ visualize a git commit as timeline entry
+    \\[-1pt]%                                                       % |
+    \parbox[b]{7em}{\hfill{#1 $\cdots$ }}%                          % | create box with timestamp (#1 argument) and centered dots
+    \makebox[0pt][c]{$\bullet$}\vrule%                              % | create box for bullet and insert vertical line
+    \quad%                                                          % | insert some spaces
+    \commit{9em}{#2}[#3]{#4}[#5][#6]{#7}%                           % |
+    \\[-1pt]%                                                       % |
+}                                                                   % |
+
+% usage:
+%   \begin{HistoryTimeline}[<Title>]
+%     \HistoryTlEntry{...}
+%   \end{HistoryTimeline}
+%
+\NewEnviron{HistoryTimeline}[1][Commit History]                     % ┝ table environment for git history timeline
+{                                                                   % |
+    \begin{table}[h]                                                % |
+        \textbf{#1}                                                 % |
+        \centering                                                  % |
+        \begin{minipage}[t]{\textwidth}                             % |
+            \rule{\textwidth}{1pt}%                                 % |
+            \BODY                                                   % |
+            \bigskip                                                % |
+            \rule{\textwidth}{1pt}                                  % |
+        \end{minipage}                                              % |
+    \end{table}                                                     % |
+}                                                                   % |
+
+% usage: \HistoryTabEntry{<Date>}{<SHA>}[<SHA-Url>]{<Author>}[<Author-Url>][<Author-Image>]{<Message>}
+%
+\NewDocumentCommand{\HistoryTabEntry}{mmomoom}{%                    % ┝ visualize a git commit as table entry
+    #1 & \commit{9em}{#2}[#3]{#4}[#5][#6]{#7} \\[2pt]%              % |
+}                                                                   % |
+
+% usage:
+%   \begin{HistoryTable}[<Title>]
+%     \HistoryTabEntry{...}
+%   \end{HistoryTable}
+%
+\NewEnviron{HistoryTable}[1][Full Commit History]                           % ┝ table environment for git history table
+{                                                                           % |
+    \begin{center}                                                          % |
+        \textbf{#1}                                                         % |
+    \end{center}                                                            % |
+    \keepXColumns                                                           % |
+    \begin{tabularx}{\textwidth}%                                           % |
+        {>{\centering\arraybackslash}p{6em}>{\raggedright\arraybackslash}X} % |
+        \toprule                                                            % |
+        Date & Information\\                                                % |
+        \midrule                                                            % |
+        \endhead                                                            % |
+        \BODY                                                               % |
+        \bottomrule                                                         % |
+    \end{tabularx}                                                          % |
+}                                                                           % |

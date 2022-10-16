@@ -1,0 +1,115 @@
+%
+% Copyright (c) 2022 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+% ============================================
+%  Enable or disable packages and/or commands 
+% ============================================
+
+% ----- no additional packages required ------
+
+% usage: \tsize<size>{<Text>}
+% sizes: tiny, script, footnote, small, normal, large, Large, LARGE, huge, Huge
+% example:
+%   \tsizetiny{lorem ipsum}
+%   \tsizeHuge{lorem ipsum}
+%
+\newcommand{\tsizetiny}[1]{{\tiny #1}}
+\newcommand{\tsizescript}[1]{{\scriptsize #1}}
+\newcommand{\tsizefootnote}[1]{{\footnotesize #1}}
+\newcommand{\tsizesmall}[1]{{\small #1}}
+\newcommand{\tsizenormal}[1]{{\normalsize #1}}
+\newcommand{\tsizelarge}[1]{{\large #1}}
+\newcommand{\tsizeLarge}[1]{{\Large #1}}
+\newcommand{\tsizeLARGE}[1]{{\LARGE #1}}
+\newcommand{\tsizehuge}[1]{{\huge #1}}
+\newcommand{\tsizeHuge}[1]{{\Huge #1}}
+
+% usage: \maketitletoc
+%
+\newcommand{\maketitletoc}[1]{            % ┝ make title, include toc and center vertically with a slight offset
+    \null\nointerlineskip\vfill           % |
+    \let\snewpage\newpage                 % |
+    \let\newpage\relax                    % |
+    \maketitle                            % |
+    \vspace{2em}                          % | add some space between title and toc
+    \tableofcontents                      % |
+    \vspace{0.1\textheight}               % | add offset
+    \let\newpage\snewpage                 % |
+    \vfill\break                          % |
+}                                         % |
+
+% ----------- using xcolor package -----------
+\usepackage{xcolor}                         % enable colour management
+
+% usage: \hl{<Text>}
+%
+\newcommand{\hl}[1]{\colorbox[HTML]{FBF719}{#1}}
+
+% ----------- using array package ------------
+\usepackage{array}                          % extend options for column formats
+
+% usage
+%   \begin{tabular}{ L{<width>} C{<width>} R{<width>} }
+%     ...
+%   \end{tabular}
+%
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}   % left aligned column with custom width
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}     % center aligned column with custom width
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}    % right aligned column with custom width
+
+% ---------- using enumitem package ----------
+\usepackage{enumitem}                       % control layout of list environments
+
+% usage:
+%   \begin{titled}{<Title>}
+%     ...
+%   \end{titled}
+%
+% \usepackage{calc}                           % perform arithmetic on the arguments of latex commands
+% \newenvironment{titled}[1]{                 % ┝ indent the content by the length of the title
+%     \begin{description}[%                   % |
+%             leftmargin=%                    % | example:
+%                 \widthof{\textnormal{#1}},% % |   \begin{titled}{lorem ipsum: }
+%             labelwidth=0pt,%                % |     Lorem ipsum\\
+%             labelsep=0pt%                   % |     Lorem ipsum\\
+%         ]                                   % |     ...
+%         \item[\textnormal{#1}]              % |   \end{titled}
+%         \begin{sloppypar}                   % |
+% }{                                          % | output of example:
+%         \end{sloppypar}                     % |   lorem ipsum: Lorem ipsum
+%     \end{description}                       % |                Lorem ipsum
+% }                                           % |                ...
+
+% --------- using tcolorbox package ----------
+% \usepackage[most]{tcolorbox}              % coloured and framed text boxes with a heading line
+
+% usage:
+%   \begin{restofpage}[<options>]
+%     ...
+%   \end{restofpage}
+%
+% \newtcolorbox{restofpage}[1][]{           % ┝ create a new box environment with the '\restspace' command in it with the
+%  enhanced,                                % |  height set to the rest of the current page's available vertical space
+%  frame hidden,                            % |
+%  colback=white,                           % | example:
+%  height fill,                             % |   \begin{restofpage}[frame style, boxrule=0.5pt]
+%  space to=\restspace,                     % |     \includegraphics[height=\restspace]{images/lorem_picsum.jpg}
+%  #1                                       % |   \end{restofpage}
+% }                                         % |
+
+% usage: \graybox{<Text>}
+%
+% \newcommand{\graybox}[1]{%                % ┝ create a simple gray box with text for a few notes
+%     \begin{tcolorbox}[%                   % |
+%         enhanced,%                        % |
+%         frame hidden,%                    % |
+%         width=\linewidth%                 % |
+%     ]                                     % |
+%     #1                                    % |
+%     \end{tcolorbox}%                      % |
+% }                                         % |

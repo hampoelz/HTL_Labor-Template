@@ -1,0 +1,140 @@
+%
+% Copyright (c) 2022 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+% ========================================
+%              Do not change!             
+%                                         
+%     You can change configurations and   
+%      packages in the sections below     
+% ========================================
+
+\typeout{Rene Hampölz, 2022}
+
+\usepackage{luaotfload}                 % Font loader
+\usepackage{fontspec}                   % Font selection
+\usepackage[EU2]{fontenc}               % Font encoding
+\usepackage[extendedchars]{grffile}     % non-ascii characters in paths
+\usepackage{lmodern}                    % text & mathematics fonts / additional characters
+
+\newcommand\auxDir{./out}               % auxiliary directory (must be identical to the definition in the .latexmkrc file)
+
+% ========================================
+%              Configurations             
+% ========================================
+
+% --------------- language ---------------
+% \usepackage[english]{babel}             % english language
+\usepackage[german]{babel}              % german language
+
+% ----- auto-generate commit history -----
+% title of the generated history timeline
+\protected\def\HistoryTimelineTitle{Änderungsverlauf}
+
+% maximum commits to show in the history timeline
+\def\HistoryTimelineLimit{5}
+
+% title of the generated history table
+\protected\def\HistoryTableTitle{Vollständiger Änderungsverlauf}
+
+% maximum commits to show in the history table use '0' for no limit
+\def\HistoryTableLimit{0}
+
+% commits ignored in generated history (seperate with space)
+% example config:
+%   \def\HistoryIgnoreCommits{32d0a55 b64004a d431f06}
+\def\HistoryIgnoreCommits{}
+
+% ------------ document fonts ------------
+% add custom fonts to the "fonts" folder and change the configurations below
+
+\setmainfont{NotoSans}%             % document default font
+[                                   % ┝ comment out this section to use globally installed fonts
+    Path = fonts/,                  % |
+    Extension = .ttf,               % |
+    UprightFont = *-Regular,        % |
+    BoldFont = *-Bold,              % |
+    ItalicFont = *-Italic,          % |
+    BoldItalicFont = *-BoldItalic   % |
+]                                   % |
+
+\setmonofont{NotoSansMono}%         % document mono font
+[                                   % ┝ comment out this section to use globally installed fonts
+    Path = fonts/,                  % |
+    Extension = .ttf,               % |
+    UprightFont = *-Regular,        % |
+    BoldFont = *-Bold,              % |
+]                                   % |
+
+% ========================================
+%        Enable or disable packages       
+% ========================================
+
+% ------------ preconfigured -------------
+\usepackage{styles/history}             % auto-generate commit history - included packages: xparse, graphicx, calc, booktabs, ltablex, environ, ifplatform
+\usepackage{styles/commands}            % enable or disable predefined commands
+\usepackage{styles/htbla}               % htbla weiz styles - included packages: geometry
+
+% --------- mathematical packages --------
+\usepackage{amsmath}                    % mathematical symbols
+\usepackage{amssymb}                    % mathematical symbols
+\usepackage{amsfonts}                   % mathematical symbols
+
+% ----------- general packages -----------
+\usepackage{tocvsec2}                   % table of contents control
+\usepackage{hyperref}                   % produce hypertext links
+\usepackage{csquotes}                   % advanced facilities for quotations
+
+    % ::::::: toc cheatsheet :::::::
+    % -1 = \part
+    %  0 = \chapter
+    %  1 = \section
+    %  2 = \subsection
+    %  3 = \subsubsection
+    %  4 = \paragraph
+    %  5 = \subparagraph
+    % ::::::::::::::::::::::::::::::
+
+% ----------- layout packages ------------
+\usepackage{geometry}                   % modify document dimensions
+\usepackage{parskip}                    % customize paragraph indent
+\usepackage{calc}                       % perform arithmetic on the arguments of latex commands
+\usepackage{float}                      % improved interface for defining figures and tables
+\usepackage{multicol}                   % add column environment
+\usepackage{multirow}                   % merge rows in tables
+% \usepackage{subcaption}                 % add subfigures and subtables
+% \usepackage{wrapfig}                    % create figures with floating text around
+% \usepackage{enumitem}                   % control layout of list environments
+% \usepackage{array}                      % extend options for column formats
+
+% ----------- styling packages -----------
+% \usepackage{booktabs}                   % enhance tables styles
+% \usepackage{xcolor}                     % enable colour management
+% \usepackage[most]{tcolorbox}            % add coloured and framed boxes environment
+
+% ------- bibliography management --------
+% \usepackage[                            % ┝ easier and more flexible bibliography management
+%  backend=biber,                         % |
+%  style=iso-numeric,                     % | or iso-authoryear
+% ]{biblatex}                             % |
+% \addbibresource{references.bib}         % |
+
+% -------- source code formatting --------
+% \PassOptionsToPackage{outputdir=\auxDir}{minted}\usepackage{minted}
+
+% ----------- markdown support -----------
+
+    % ::::::: configuration ::::::::
+    % \PassOptionsToPackage{smartEllipses}{markdown}                  % enable ellipses
+    % \PassOptionsToPackage{hashEnumerators}{markdown}                % enable additional list declarations
+    % \PassOptionsToPackage{pipeTables,tableCaptions}{markdown}       % enable tables
+    % \PassOptionsToPackage{fencedCode}{markdown}                     % enable inline code-blocks
+    % \PassOptionsToPackage{inlineFootnotes}{markdown}                % enable inline footnotes
+    % \PassOptionsToPackage{hybrid}{markdown}                         % enable LaTeX in markdown
+    %::::::::::::::::::::::::::::::
+
+% \usepackage{markdown}\def\markdownOptionOutputDir{\auxDir}          % markdown support

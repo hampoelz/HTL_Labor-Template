@@ -1,0 +1,68 @@
+%
+% Copyright (c) 2022 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+\typeout{Rene Hampölz, 2022}
+
+% ========================================
+%              Do not change!             
+% ========================================
+
+\usepackage{xcolor}
+\definecolor{htbla}{HTML}{148873}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, allcolors=htbla}
+
+\usepackage{geometry}
+\geometry{top=20mm,bottom=25mm}
+
+% usage: \htltitle{<Title>}
+%
+\newcommand{\htltitle}[1]{                                      % ┝ include HTL-Weiz logo in title
+    \title{                                                     % |
+        \parbox[c]{4.63em}{                                     % | 
+            \includegraphics[height=2em]{images/logo.png}       % | logo.png size: 347x150 (w=2.313*h)
+        }                                                       % |
+        \hspace{1em}                                            % |
+        \parbox[c]{0.9\linewidth-4.63em}{                       % |
+            \raggedright                                        % |
+            #1                                                  % |
+        }                                                       % |
+    }                                                           % |
+}                                                               % |
+
+% usage: \htlheader{<Title>}{<Content>}
+%
+\usepackage{fancyhdr, calc}
+\newcommand{\usehtlheader}[2]{                                  % ┝ use a header with the HTL Weiz logo, a title and some content
+    \newcommand{\htlheader}[2]{                                 % | ┝ style of header
+        \LARGE                                                  % | |
+        \parbox[c]{4.63em}{                                     % | |
+            \includegraphics[height=2em]{images/logo.png}       % | |
+        }                                                       % | |
+        \hspace{1em}                                            % | |
+        \parbox[c]{\widthof{\textbf{#1}}}{                      % | |
+            \raggedright                                        % | |
+            \textbf{#1}                                         % | |
+            \tsizenormal{                                       % | |
+                \centering                                      % | |
+                #2                                              % | |
+                \par                                            % | |
+            }                                                   % | |
+        }                                                       % | |
+        \vspace{1em}                                            % | |
+    }                                                           % | |
+    \pagestyle{fancy}                                           % | enable custom header
+    \fancyhead{}\fancyfoot{}                                    % | remove existing header and footer content
+    \fancyhead[C]{\htlheader{#1}{#2}}                           % | set header to htl header
+    \setlength{\headheight}{                                    % | ┝ adjust header hight to match htl header 
+        \totalheightof{\htlheader{#1}{#2}} + 1.5em              % | |
+    }                                                           % | |
+}                                                               % |
+
+\usepackage{styles/htbla-labor}

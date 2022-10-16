@@ -1,0 +1,127 @@
+\documentclass[a4paper]{hitec}
+\settextfraction{0.95}      % reduce left margin
+
+\usepackage{styles/main}
+\usepackage{styles/custom}
+
+\labtitle{}
+
+\author{}
+\company{HTBLA Weiz}
+\date{}
+
+\begin{document}
+\input{styles/htbla-labor.tex}
+
+\maketitletoc
+\clearpage
+
+\section{Einführung}
+
+\begin{sagesilent}
+    R = 95.5
+\end{sagesilent}
+
+Angaben: $R = \sage{norm(R)}\Omega$
+
+\section{Schaltung}
+
+\begin{figure}[H]
+    \centering
+    \begin{circuitikz}
+        \draw
+          (0,0)     coordinate (in+)
+        ++(4,0)     coordinate (out+)
+          (0,-3)    coordinate (in-)
+        ++(4,0)     coordinate (out-)
+
+        (in+) to[R=$R$,i=$I$,o-o] (out+)
+        (in-) to[short,o-o] (out-)
+        
+        (in+)   to[open, v=$U_e$] (in-)
+        (out+)  to[open, v^=$U_a$] (out-)
+        ;
+    \end{circuitikz}
+\end{figure}
+
+\section{Berechnungen}
+
+\begin{equation*}
+    \frac{U}{R \cdot I}
+\end{equation*}
+
+\begin{sagesilent}
+    I = 0.005
+    U = R * I
+\end{sagesilent}
+
+\begin{align*}
+    U &= R \cdot I \\
+    U &= \sage{norm(R)} \cdot \sage{norm(I)} \\
+    U &= \sage{norm(U)}V
+\end{align*}
+
+\section{Simulation}
+
+\section{Auswertung}
+
+\begin{sagesilent}
+    measures = Measures(
+        [
+            '$R$ in $\Omega$',
+            '$I$ in $A$', 
+            '$U_a$ in $V$'
+        ], [
+            [norm(R), '0.005', '0.4775'],
+            [norm(R), '0.010', '0.4775']
+    ])
+
+    List_R = measures.columns[0]
+    List_I = measures.columns[1]
+    List_Ua = measures.columns[2]
+\end{sagesilent}
+
+\subsection{Messwerte}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \sage{measures.table}
+\end{center}
+
+\subsection{Grafische Darstellung}
+
+\begin{sagesilent}
+    f = list_plot(
+        list(zip(List_I, List_Ua)),
+        color='blue',
+        plotjoined=True,
+        figsize=[5,2],
+        axes_labels=['$I$ in $A$', '$U_a$ in $V$'],
+        axes_labels_size=1
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{f}
+    \caption{Ausgangskennlinie mit gemessene Werte}
+\end{figure}
+
+\clearpage
+
+\subsection{Verwendete Geräte}
+
+\medskip
+
+\begin{devicelist}
+    \devicecat{}{2}{
+        \device{}{}
+        \device{}{}
+    }
+\end{devicelist}
+
+\vfill
+
+\IncludeHistoryTimeline
+
+\end{document}
