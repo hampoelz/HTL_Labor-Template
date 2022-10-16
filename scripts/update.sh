@@ -10,7 +10,7 @@
 
 # minimum required git version: v2.22.0
 
-gh_repo="hampoelz/HTL_LaTeX-Template"
+gh_repo="hampoelz/HTL_Labor-Template"
 remote_branch="main"
 
 remote="https://github.com/$gh_repo"
@@ -27,7 +27,7 @@ tplver_file=".git/tplver"
 currbr_file=".git/currbr"
 
 # commits ignored by cherry-pick (seperate with space)
-ignore_SHAs="9fa9fd2"
+ignore_SHAs="ecb34d6"
 
 
 hookmgr_path="scripts/hookmgr.sh"
