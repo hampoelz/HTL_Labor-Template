@@ -18,13 +18,13 @@ jobs:
       run: |
         apt-get update -y
         apt-get install -y jq sagemath sagetex inkscape
-        texhash --verbose
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
     - name: Build document
       run: |
+        cp /usr/share/texmf/tex/latex/sagetex/sagetex.sty ./
         latexmk -g --interaction=nonstopmode
         cp out/main.pdf out/${{ github.event.repository.name }}.pdf
     - name: Upload build artifacts
