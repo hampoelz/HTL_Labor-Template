@@ -1,0 +1,62 @@
+%
+% Copyright (c) 2022 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+\typeout{Rene Hampölz, 2022}
+
+% ========================================
+%              Do not change!             
+% ========================================
+
+\usepackage{sagetex}
+\usepackage{circuitikz}
+\usetikzlibrary{arrows}
+
+\usepackage{svg}
+
+\confidential{\textbf{Elektrotechnisches Labor}}
+\ctikzset{resistor = european}
+
+% usage: \labtitle{<Title>}
+%
+\newcommand{\labtitle}[1]{                                      % ┝ include HTL-Weiz logo in title
+    \htltitle{
+        \textbf{\underline{Laborübung}}
+        \smallbreak
+        #1
+    }
+}                                                               % |
+
+% usage
+%   \begin{devicelist}
+%     \devicecat{...}
+%     ...
+%   \end{devicelist}
+%
+\newenvironment{devicelist}{
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}{|l|c|r|}
+            \hline
+            \multicolumn{1}{|c|}{\textbf{Geräteart}} & \textbf{Inventar Nummer} & \multicolumn{1}{|c|}{\textbf{Bezeichnung}} \\[1ex]
+            \hline \hline
+}{    
+        \end{tabular}
+    \end{center}
+}
+
+% usage:
+%   \devicecat{<Category>}{<Entry Count>}{
+%     \device{...}
+%     ...
+%   }
+%
+\newcommand{\devicecat}[3]{\multirow{#2}{*}{\textbf{#1}} #3 \hline}
+
+% usage: \device{<Inventory ID>}{<Designation>}
+%
+\newcommand{\device}[2]{& \texttt{#1} & $#2$ \\}

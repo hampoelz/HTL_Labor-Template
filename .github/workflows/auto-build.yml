@@ -11,13 +11,21 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: texlive/texlive:latest
     steps:
     - name: Install jq
       run: |
         apt-get update -y
         apt-get install -y jq
+    - name: Install inkscape
+      run: |
+        apt-get update -y
+        apt-get install -y inkscape
+    - name: Install sagemath
+      run: |
+        apt-get update -y
+        apt-get install -y sagemath
     - name: Checkout repository
       uses: actions/checkout@v2
       with:

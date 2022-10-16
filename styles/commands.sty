@@ -31,17 +31,17 @@
 
 % usage: \maketitletoc
 %
-% \newcommand{\maketitletoc}[1]{            % ┝ make title, include toc and center vertically with a slight offset
-%     \null\nointerlineskip\vfill           % |
-%     \let\snewpage\newpage                 % |
-%     \let\newpage\relax                    % |
-%     \maketitle                            % |
-%     \vspace{2em}                          % | add some space between title and toc
-%     \tableofcontents                      % |
-%     \vspace{0.1\textheight}               % | add offset
-%     \let\newpage\snewpage                 % |
-%     \vfill\break                          % |
-% }                                         % |
+\newcommand{\maketitletoc}[1]{            % ┝ make title, include toc and center vertically with a slight offset
+    \null\nointerlineskip\vfill           % |
+    \let\snewpage\newpage                 % |
+    \let\newpage\relax                    % |
+    \maketitle                            % |
+    \vspace{2em}                          % | add some space between title and toc
+    \tableofcontents                      % |
+    \vspace{0.1\textheight}               % | add offset
+    \let\newpage\snewpage                 % |
+    \vfill\break                          % |
+}                                         % |
 
 % ----------- using xcolor package -----------
 \usepackage{xcolor}                         % enable colour management

@@ -1,0 +1,11 @@
+\begin{sagesilent}
+    def norm(x):
+        return '{:n}'.format(float(x))
+    
+    class Measures:
+        def __init__(self, titles, values):
+            self.titles = titles
+            self.rows = values
+            self.columns = list(zip(*values))
+            self.table = table(values, header_row=titles, frame=true, align='center')
+\end{sagesilent}
