@@ -1,0 +1,98 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "./scripts/clean.sh",
+            "windows": {
+                "command": "./scripts/clean.bat"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "never",
+                "showReuseMessage": false,
+                "close": true,
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Update Template",
+            "type": "shell",
+            "command": "./scripts/update.sh",
+            "args": [ "--${input:abort}" ],
+            "windows":{
+                "command": "./scripts/update.bat",
+                "args": [ "/${input:abort}" ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Check Template Updates",
+            "type": "shell",
+            "command": "./scripts/update.sh",
+            "args": [
+                "--check"
+            ],
+            "windows": {
+                "command": "./scripts/update.bat",
+                "args": [
+                    "/check"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install requirements",
+            "type": "shell",
+            "command": "echo Sorry your platform is not yet supported!",
+            "windows": {
+                "command": "./scripts/install.bat",
+                "args": [ "/installonly" ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "abort",
+            "type": "pickString",
+            "description": "Select a task execution option:",
+            "options":[ "run or continue", "abort" ],
+            "default": "run or continue",
+        },
+    ]
+}

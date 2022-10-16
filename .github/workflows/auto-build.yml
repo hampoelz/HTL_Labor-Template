@@ -1,0 +1,43 @@
+name: Automated Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    steps:
+    - name: Install jq
+      run: |
+        apt-get update -y
+        apt-get install -y jq
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Build document
+      run: |
+        latexmk -g --interaction=nonstopmode
+        cp out/main.pdf out/${{ github.event.repository.name }}.pdf
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: LaTeX-Output
+        path: out/
+    - name: Check release tag
+      id: check_tag
+      if: github.event_name != 'pull_request'
+      run: echo "::set-output name=build_tag::$(git tag -l build)"
+    - name: Release artifacts
+      uses: softprops/action-gh-release@v1
+      if: ${{ steps.check_tag.outputs.build_tag == 'build' }}
+      with:
+        tag_name: build
+        files: out/${{ github.event.repository.name }}.pdf
