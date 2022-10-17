@@ -16,7 +16,7 @@
 \usepackage{circuitikz}
 \usetikzlibrary{arrows}
 
-\usepackage{svg}
+\usepackage{pdftexcmds}
 
 \confidential{\textbf{Elektrotechnisches Labor}}
 \ctikzset{resistor = european}
@@ -60,3 +60,18 @@
 % usage: \device{<Inventory ID>}{<Designation>}
 %
 \newcommand{\device}[2]{& \texttt{#1} & $#2$ \\}
+
+% usage: \executeiffilenewer{<File1>}{<File2>}{<Shell Command>}
+%
+\newcommand{\executeiffilenewer}[3]{%
+    \ifnum\pdf@strcmp{\pdf@filemoddate{#1}}%
+    {\pdf@filemoddate{#2}}>0%
+    {\immediate\write18{#3}}\fi%
+}
+
+% usage: \includesvg
+%
+\newcommand{\includesvg}[2][]{
+    \executeiffilenewer{#2}{out/#2.pdf}{inkscape "#2" --export-area-drawing --batch-process --export-type=pdf --export-filename="out/#2.pdf"}
+    \includegraphics[#1]{out/#2.pdf}
+}
