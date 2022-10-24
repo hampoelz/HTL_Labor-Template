@@ -75,3 +75,7 @@
     \executeiffilenewer{#2}{out/#2.pdf}{inkscape "#2" --export-area-drawing --batch-process --export-type=pdf --export-filename="out/#2.pdf"}
     \includegraphics[#1]{out/#2.pdf}
 }
+
+% usage: \var{<SageMath Variable>}
+%
+\newcommand{\var}[1]{\sage{norm(#1)}}
