@@ -79,3 +79,25 @@
 % usage: \var{<SageMath Variable>}
 %
 \newcommand{\var}[1]{\sage{norm(#1)}}
+
+% usage:
+%   \begin{circuitikz}
+%     ...
+%     \current{<node>}{<label>}
+%   \end{circuitikz}
+%
+\newcommand{\current}[2]{
+    \node[currarrow, color=red, rotate=\ctikzgetdirection{#1}] at (#1-Ipos){};
+    \node[red,anchor=\ctikzgetanchor{#1}{Ilab}] at (#1-Ipos) {#2};
+}
+
+% usage:
+%   \begin{circuitikz}
+%     ...
+%     \voltage{<node>}{<label>}
+%   \end{circuitikz}
+%
+\newcommand{\voltage}[2]{
+    \draw[-Triangle, blue] (#1-Vfrom) -- (#1-Vto);
+    \node[anchor=\ctikzgetanchor{#1}{Vlab}, blue] at (#1-Vlab) {#2};
+}
