@@ -17,8 +17,7 @@ jobs:
     - name: Install required tools
       run: |
         sudo apt-get update -y
-        sudo apt-get install -y `sudo apt --assume-no install texlive-full | awk '/The following additional packages will be installed/{f=1;next} /Suggested packages/{f=0} f' | tr ' ' '\n' | grep -vP 'doc$' | grep -vP 'latex-cjk' | tr '\n' ' '`
-        sudo apt-get install -y jq sagemath inkscape
+        sudo apt-get install -y jq texlive-full sagemath inkscape
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
