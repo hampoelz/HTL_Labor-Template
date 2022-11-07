@@ -12,11 +12,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
-    container: texlive/texlive:latest
+    #container: texlive/texlive:latest
     steps:
     - name: Install required tools
       run: |
         apt-get update -y
+        apt-get install -y `apt --assume-no install texlive-full | awk '/The following additional packages will be installed/{f=1;next} /Suggested packages/{f=0} f' | tr ' ' '\n' | grep -vP 'doc$' | grep -vP 'latex-cjk' | tr '\n' ' '`
         apt-get install -y jq sagemath inkscape
     - name: Checkout repository
       uses: actions/checkout@v2
