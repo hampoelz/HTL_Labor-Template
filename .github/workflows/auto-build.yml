@@ -12,12 +12,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
-    container: texlive/texlive:latest
+    #container: texlive/texlive:latest
     steps:
     - name: Install required tools
       run: |
-        apt-get update -y
-        apt-get install -y jq sagemath inkscape
+        sudo apt-get update -y
+        sudo apt-get install -y jq texlive-full sagemath inkscape
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
