@@ -3,7 +3,8 @@
     from scipy import interpolate
     from scipy import ndimage
 
-    def norm(x):
+    def norm(x,n=None):
+        if (n): x = round(x, n)
         return '{:n}'.format(float(x))
     
     class Measures:
