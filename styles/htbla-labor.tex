@@ -4,8 +4,20 @@
     from scipy import ndimage
 
     def norm(x,n=None):
-        if (n): x = round(x, n)
-        return '{:n}'.format(float(x))
+        general_format = lambda x: '{:g}'.format(float(x))
+        value = general_format(x)
+        if 'e' in value:
+            value = value.split('e')[0]
+            length = len(value)
+            if '.' in value:
+                value = value.split('.')
+                if n: length = len(value[0]) + n
+                else: length = len(value[0]) + len(value[1])
+            return numerical_approx(x, digits=length)
+        if n:
+            x = round(x, ndigits=n)
+            return general_format(x)
+        return value
     
     class Measures:
         def __init__(self, titles, values):
