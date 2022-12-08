@@ -16,6 +16,7 @@ def norm(x, n=None):
     # calculate digits of a number to the right and left of the decimal point
     def numerical_approx_length(x):
         value = general_format(x)
+        value = value.replace('-', '') # remove minus sign to get correct length of number
         if 'e' in value:
             value = value.split('e')[0]
         length = [len(value), n or 1]  # 1 = default number of decimal places
