@@ -1,0 +1,86 @@
+\newcommand{\compare}[2][None]{
+    \begin{flushleft}
+        Standardmäßige Darstellung mit \texttt{{\textbackslash}sage}: \quad $\sage{#2}$\\
+        Darstellung mit der Hilfsfunktion \texttt{{\textbackslash}var }: \quad $\var{#2, #1}$
+    \end{flushleft}
+} 
+
+\section{Numerische Darstellungen \textit{(von Berechnungen)}}
+
+\subsection{Ganze Zahlen}
+\compare{3}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3}
+
+\subsubsection{Große Zahlen}
+\compare{3140000}
+
+\subsection{Rationale Zahlen}
+\compare{22/7}
+
+\subsection{Reelle Zahlen}
+\compare{3.14}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3.14}
+
+\subsubsection{Auf 4 Dezimalstellen runden}
+\compare[4]{3.14159265359}
+
+\subsubsection{Mit vielen Dezimalstellen}
+\compare{3.14159265359}
+
+\subsubsection{Kleine Zahlen}
+\compare{0.00000314}
+
+\subsubsection{Große Zahlen}
+\compare{3140000.0}
+
+\subsection{Komplexe Zahlen}
+\compare{3+6*I}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3.14+6.28*I}
+
+\subsubsection{Auf 4 Dezimalstellen runden}
+\compare[4]{3.14159265359+6.2831853072*I}
+
+\subsubsection{Mit vielen Dezimalstellen}
+\compare{3.14159265359+6.2831853072*I}
+
+\subsubsection{Kleine Zahlen}
+\compare{00.00000314+0.628*I}
+
+\subsubsection{Große Zahlen}
+\compare{3140000+62800000*I}
+
+\subsection{Vektoren}
+\compare{vector([3,6,-9])}
+
+\subsubsection{Mit komplexen Zahlen}
+\compare{vector([3+6*I,6-3*I,-9+6*I])}
+
+\subsubsection{Mit reellen Zahlen}
+\compare{vector([3.14,6.28,-9.42])}
+
+\subsubsection{Mit \textit{(kleinen/großen)} reellen und komplexen Zahlen}
+\compare{vector([3140000,3.14159+6.28318*I,-0.00000314])}
+
+\subsubsection{Auf 4 Dezimalstellen runden/erweitern}
+\compare[4]{vector([3140000,3.14159+6.28318*I,-0.00000314])}
+
+\subsection{Matrizen}
+\compare{Matrix([[3,6,-9],[9,6,3],[3,3,3]])}
+
+\subsubsection{Mit komplexen Zahlen}
+\compare{Matrix([[3+6*I,6-3*I,-9+6*I], [9+6*I,6-3*I,3+6*I], [3+6*I,3+6*I,3+6*I]])}
+
+\subsubsection{Mit reellen Zahlen}
+\compare{Matrix([[3.1,6.3,-9],[9,6.3,3.1],[3.1,3.1,3.1]])}
+
+\subsubsection{Mit \textit{(kleinen/großen)} reellen und komplexen Zahlen}
+\compare{Matrix([[3140000,3.14159+6.28318*I,-0.00000314],[-0.00000314,3140000,3.14159+6.28318*I],[3140000,3140000,3140000]])}
+
+\subsubsection{Auf 4 Dezimalstellen runden/erweitern}
+\compare[4]{Matrix([[3140000,3.14159+6.28318*I,-0.00000314],[-0.00000314,3140000,3.14159+6.28318*I],[3140000,3140000,3140000]])}
