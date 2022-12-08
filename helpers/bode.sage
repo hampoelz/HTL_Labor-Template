@@ -37,19 +37,19 @@ class Bode:
         return signal.TransferFunction([u_imag, u_real], [v_imag, v_real])
 
     def plot_data_omeg_mag(self):
-        w, mag_dB = self.data
+        w, mag_dB, pha = self.data
         return list(zip(w, mag_dB))
 
     def plot_data_omeg_pha(self):
-        w, _, pha = self.data
+        w, mag_dB, pha = self.data
         return list(zip(w, pha))
 
     def plot_data_freq_mag(self):
         f = self.freq
-        _, mag_dB = self.data
+        w, mag_dB, pha = self.data
         return list(zip(f, mag_dB))
 
     def plot_data_freq_pha(self):
         f = self.freq
-        _, _, pha = self.data
+        w, mag_dB, pha = self.data
         return list(zip(f, pha))
