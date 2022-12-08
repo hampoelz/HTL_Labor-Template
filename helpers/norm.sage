@@ -5,12 +5,20 @@ def norm(x, n=None):
     # convert number to decimal or scientific format based on complexity
     def general_format(x): return '{:g}'.format(float(x))
 
+    # execute sage's "numerical_approx" function if the number contains decimals, otherwise return an integer
+    def numerical_approx(x, digits=None):
+        x = x.n(digits=digits)
+        value = general_format(x)
+        if not n and not '.' in value:
+            return Integer(value)
+        return x
+
     # calculate digits of a number to the right and left of the decimal point
     def numerical_approx_length(x):
         value = general_format(x)
         if 'e' in value:
             value = value.split('e')[0]
-        length = [len(value), 1]  # 1 = default number of decimal places
+        length = [len(value), n or 1]  # 1 = default number of decimal places
         if '.' in value:
             value = value.split('.')
             r_len = 0 if value[0] == '0' else len(value[0])
@@ -29,25 +37,20 @@ def norm(x, n=None):
         return sum(numerical_approx_length(x))
 
     # format a number for better readability
-    def approx(x, length=None, allow_str=False):
+    def approx(x, length=None):
         if not length:
             length = approx_length(x)
-
+        
         # handle complex numbers
         if hasattr(x, 'real') and hasattr(x, 'imag') and x.imag():
-            return numerical_approx(x, digits=length)
+            x_real = numerical_approx(x.real(), digits=length)
+            x_imag = numerical_approx(x.imag(), digits=length)
 
-        # handle numbers
-        # converting to the general format has some disadvantages:
-        # - accepts only data types that can be cast to float
-        # - causes problems with vectors and matrices, which do not accept strings
-        # - decimals are truncated depending on complexity (problematic when 'n' of decimals are desired)
-        # - the scientific form of numbers is not correctly rendered in LaTeX
-        # therefore, the number is only converted if the above problems do not apply
-        value = general_format(x)
-        if allow_str and not n and 'e' not in value:
-            return value
-
+            # arrange real and imaginary parts
+            v = vector([x_real, x_imag])
+            R = v.base_ring()
+            return R[['i']](v.list())
+        
         return numerical_approx(x, digits=length)
 
     # handle vectors
@@ -76,4 +79,4 @@ def norm(x, n=None):
         return matrix(m)
 
     # handle numbers
-    return approx(x, allow_str=True)
+    return approx(x)
