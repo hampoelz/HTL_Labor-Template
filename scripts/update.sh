@@ -56,7 +56,7 @@ function pull_script()
     
     script_path="$(realpath $1)"
     if [ "$(realpath $0)" == "$script_path" ]; then return 0; fi
-    if [ -d "$script_path" ]; then
+    if [ -d "$(dirname "$script_path")" ]; then
         echo Pull latest update script ...
         curl -sL "$script_url" -o "$script_path"
         bash "$script_path" $2
@@ -298,7 +298,7 @@ function start()
 
 check_git
 check_internet
-if [ "$1" != "--check" ]; then pull_script "$script_path" "$1"; fi
+pull_script "$script_path" "$1"
 
 check_git_version
 

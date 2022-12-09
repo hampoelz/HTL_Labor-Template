@@ -43,7 +43,7 @@ if exist "%currbr_file%" set /p branch=< "%currbr_file%"
 
 call:check_git
 call:check_internet
-if not [%1] == [/check] call:pull_script "%script_path%" "%~1"
+call:pull_script "%script_path%" "%~1"
 
 call:refresh_env
 call:check_git_version
