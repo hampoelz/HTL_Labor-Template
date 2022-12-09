@@ -41,7 +41,7 @@ function show_usage()
 }
 
 function jq_binary() {
-    arch=$(uname -i)
+    arch=$(uname -m)
 
     if [[ $arch == x86_64* ]] || [[ $arch == i*86 ]]; then
         
