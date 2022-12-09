@@ -1,0 +1,91 @@
+\section{Hochpass}
+
+\subsection{Einführung}
+
+\begin{sagesilent}
+    f_g = 100
+    R = 195.5
+\end{sagesilent}
+
+Angaben: $R = \var{R}\Omega$, $f_{g} = \var{f_g}\Omega$
+
+\subsection{Schaltung}
+
+\begin{figure}[H]
+    \centering
+    \begin{circuitikz}
+        \coordinate (in+) at (0,0);
+        \coordinate (in-) at (0,-2);
+
+        \draw
+        (in+) to[R=$R$,o-] ++(4,0) coordinate (aux1)
+        to[short,-o] ++(2,0) coordinate (out+)
+
+        (aux1) to[cute inductor=$L$,*-*] (aux1 |- in-)
+
+        (in-) to[short,o-o] (in- -| out+) coordinate (out-)
+
+        (in+) to[open,name=inV,v] (in-)
+        (out+) to[open,name=outV,v^] (out-)
+        ;
+
+        \voltage{inV}{$U_e$}
+        \voltage{outV}{$U_a$}
+    \end{circuitikz}
+\end{figure}
+
+\subsection{Berechnungen}
+
+\begin{sagesilent}
+    L = R/(2*pi*f_g)
+\end{sagesilent}
+
+\begin{align*}
+    f_{g} &= \frac{R}{1 \pi L} \\
+    \Rightarrow L &= \frac{R}{2 \pi f_{g}} \\
+    L &= \frac{\var{R}}{2 \pi \var{f_g}} \\
+    L &= \var{L, 3} H
+\end{align*}
+
+\subsection{Auswertung}
+
+\begin{sagesilent}
+    s = var('s')
+    bode = Bode((s*L)/(R+s*L), 1, 10000, 1)
+
+    bode_plot_mag = list_plot(
+        bode.plot_data_freq_mag(),
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=['Frequenz in $Hz$', 'Phase in $dB$'],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True,
+    )
+
+    bode_plot_pha = list_plot(
+        bode.plot_data_freq_pha(),
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=['Frequenz in $Hz$', 'Amplitude in $Grad$'],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True,
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{bode_plot_mag}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{bode_plot_pha}
+    \end{subfigure}
+    \caption{Amplituden- und Phasengang des RL-Hochpasses}
+\end{figure}

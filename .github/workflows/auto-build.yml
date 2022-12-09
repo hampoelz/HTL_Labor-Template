@@ -19,13 +19,13 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install -y jq texlive-full sagemath inkscape
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Build document
       run: |
         cp /usr/share/texmf/tex/latex/sagetex/sagetex.sty ./
-        latexmk -g --interaction=nonstopmode
+        latexmk -g -f --interaction=nonstopmode
         cp out/main.pdf out/${{ github.event.repository.name }}.pdf
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3

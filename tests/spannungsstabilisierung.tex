@@ -1,0 +1,180 @@
+\section{Spannungsstabilisierung}
+
+\subsection{Einführung}
+
+\begin{sagesilent}
+    U_e0 = 10
+    I_a_max = 0.05
+    I_ZD = 0.001
+
+    U_ZD = 5.1
+    U_ZD_max = 5.4
+    U_BE = 0.66
+\end{sagesilent}
+
+Angaben: $U_{e0} = \var{U_e0}V$, $I_{a_{max}} = \var{I_a_max}A$, $I_{ZD} = \var{I_ZD}A$
+
+Datenblatt: $U_{ZD} = \var{U_ZD}V$, $U_{ZD_{max}} = \var{U_ZD_max}V$, $U_{BE} = \var{U_BE}V$
+
+\subsection{Schaltung}
+
+\begin{figure}[H]
+    \centering
+    \begin{circuitikz}
+        \coordinate (in+) at (0,0);
+        \coordinate (in-) at (0,-5);
+
+        \draw
+        (in+) to[short,o-] ++(2,0) coordinate (aux1)
+        to[R=$R_{V}$,*-*] ++(0,-2) coordinate (aux2)
+        to[zD=$ZD$,name=ZD,i>^,invert,*-*] (aux2 |- in-)
+
+        (aux2) ++(2,0) node[npn] (T) {$T$}
+        (T.E) coordinate (out+)
+
+        (aux2) to[short,name=I_B,i] (T.B)
+        (aux1) -- (aux1 -| T.C) -- (T.C)
+
+        (out+) to[R=$R_{L}$,name=R_L,i>^,o-o] (out+ |- in-) coordinate (out-)
+
+        (in-) to[short,o-] (out-)
+
+        (in+) to[open,name=inV,v] (in-)
+        ($(out+) + (1,0)$) to[open,name=outV,v^] ($(out-) + (1,0)$)
+        ;
+
+        \voltage{inV}{$U_{e0}$}
+        \current{ZD}{$I_{ZD}$}
+        \current{I_B}{$I_{B}$}
+        \current{R_L}{$I_{a}$}
+        \voltage{outV}{$U_{a}$}
+    \end{circuitikz}
+\end{figure}
+
+\subsection{Berechnungen}
+
+\begin{sagesilent}
+    R_V = (U_e0 - U_ZD) / I_ZD
+    R_L_min = (U_ZD_max - U_BE) / I_a_max
+\end{sagesilent}
+
+\begin{equation*}
+    R_{V} = \frac{U_{e0} - U_{ZD}}{I_{ZD} + I_{B}} \tag*{$I_{B} = \quad \ll$ \quad \textit{(vernachlässigbar)}}
+\end{equation*}
+
+\begin{align*}
+    R_{V} &= \frac{U_{e0} - U_{ZD}}{I_{ZD}} \\
+    R_{V} &= \frac{\var{U_e0} - \var{U_ZD}}{\var{I_ZD}} \\
+    R_{V} &= \var{R_V}\Omega
+\end{align*}
+
+\begin{align*}
+    R_{L_{min}} &= \frac{U_{ZD_{max}} - U_{BE}}{I_{a_{max}}} \\
+    R_{L_{min}} &= \frac{\var{U_ZD_max} - \var{U_BE}}{\var{I_a_max}} \\
+    R_{L_{min}} &= \var{R_L_min}\Omega
+\end{align*}
+
+\subsection{Simulation}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=\textwidth]{tests/spannungsstabilisierung.svg}
+    \caption{Ausgangskennlinie \textbf{$U_{a} = f(R_L)$} der Simulation}
+\end{figure}
+
+\subsection{Auswertung}
+
+\begin{sagesilent}
+    measures = Measures(
+        [
+            '$R_L$ in $\Omega$',
+            '$U_a$ in $V$', 
+            '$I_a$ in $mA$'
+        ], [
+            ['100', '3.96', '38.2'],
+            ['120', '3.96', '32.0'],
+            ['130', '3.93', '29.5'],
+            ['140', '3.94', '27.4'],
+            ['150', '3.95', '25.7'],
+            ['160', '3.94', '24.1'],
+            ['170', '3.92', '22.6'],
+            ['200', '3.91', '19.2'],
+            ['250', '3.95', '15.6'],
+            ['300', '3.98', '13.2'],
+            ['400', '4.05', '10.0'],
+            ['500', '4.10', '8.2'],
+            ['600', '4.17', '6.95'],
+            ['700', '4.22', '6.00'],
+            ['800', '4.23', '5.30'],
+            ['1000', '4.29', '4.30'],
+            ['2000', '4.30', '2.16'],
+    ])
+
+    index_RL = 0
+    index_Ua = 1
+    index_Ia = 2
+\end{sagesilent}
+
+\subsubsection{Messwerte}
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \sage{measures.table}
+\end{center}
+
+\subsubsection{Grafische Darstellung}
+
+\begin{sagesilent}
+    f = list_plot(
+        measures.plot_data(index_RL, index_Ua),
+        color='purple',
+        figsize=[5,2],
+        axes_labels=['$R_L$ in $\Omega$', '$U_a$ in $V$'],
+        axes_labels_size=1
+    )
+
+    f += line(
+        measures.g1d_smooth(index_RL, index_Ua, sigma=0.75, connect=True),
+        linestyle="--",
+        color='blue'
+    )
+
+    f += line(
+        [(100, 4), (100, 3.9)],
+        linestyle=":",
+        color="red"
+    )
+
+    f += line(
+        [(200, 4), (200, 3.9)],
+        linestyle=":",
+        color="red"
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{f}
+    \caption{Ausgangskennlinie \textbf{$U_{a} = f(R_L)$} mit gemessene Werte}
+\end{figure}
+
+\subsection{Verwendete Geräte}
+
+\medskip
+
+\begin{devicelist}
+    \devicecat{Widerstands-Dekade}{2}{
+        \device{ET-LAB-RDXX}{R_{V}}
+        \device{ET-LAB-RDXX}{R_{L}}
+    }
+    \devicecat{Multimeter}{2}{
+        \device{ET-LAB-DMXX}{I_{a}}
+        \device{ET-LAB-DMXX}{U_{a}}
+    }
+    \devicecat{Z-Diode}{1}{
+        \device{BZD23-C5V1}{ZD}
+    }
+    \devicecat{Transistor}{1}{
+        \device{BC546C}{T}
+    }
+\end{devicelist}

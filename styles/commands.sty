@@ -31,7 +31,7 @@
 
 % usage: \maketitletoc
 %
-\newcommand{\maketitletoc}[1]{            % ┝ make title, include toc and center vertically with a slight offset
+\newcommand{\maketitletoc}{               % ┝ make title, include toc and center vertically with a slight offset
     \null\nointerlineskip\vfill           % |
     \let\snewpage\newpage                 % |
     \let\newpage\relax                    % |
@@ -63,7 +63,7 @@
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}    % right aligned column with custom width
 
 % ---------- using enumitem package ----------
-\usepackage{enumitem}                       % control layout of list environments
+% \usepackage{enumitem}                       % control layout of list environments
 
 % usage:
 %   \begin{titled}{<Title>}
