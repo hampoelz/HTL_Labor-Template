@@ -21,20 +21,23 @@ class Bode:
         expr_u = expr.numerator()    # -> (L*s+0)
         expr_v = expr.denominator()  # -> (R+L*s)
 
-        # convert expressions to complex numbers
-        expr_u = expr_u.substitute(s=I)
-        expr_v = expr_v.substitute(s=I)
-        expr_u = expr_u._convert(CC)
-        expr_v = expr_v._convert(CC)
+        # convert expressions to polynomial ring
+        expr_u = expr_u._convert(QQ)
+        expr_v = expr_v._convert(QQ)
 
-        # separate the real and imaginary parts and convert to floats
-        u_imag = float(expr_u.imag())
-        v_imag = float(expr_v.imag())
-        u_real = float(expr_u.real())
-        v_real = float(expr_v.real())
+        expr_u = expr_u.list()
+        expr_v = expr_v.list()
+
+        # reverse polynomial list because scipy signal takes a different order ( [x^0, x^1, x^2] to [x^2, x^1, x^0] )
+        expr_u = expr_u[::-1] 
+        expr_v = expr_v[::-1] 
+
+        # convert to floats
+        expr_u = np.array(expr_u, dtype=float)
+        expr_v = np.array(expr_v, dtype=float)
 
         # create a linear time invariant system
-        return signal.TransferFunction([u_imag, u_real], [v_imag, v_real])
+        return signal.TransferFunction(expr_u, expr_v)
 
     def plot_data_omeg_mag(self):
         w, mag_dB, pha = self.data
