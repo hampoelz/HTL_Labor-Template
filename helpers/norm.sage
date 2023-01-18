@@ -7,8 +7,9 @@ from sage.libs.pari.convert_sage import gen_to_sage
 
 def norm(x, n=None):
     # convert input to sage object
-    x = gen_to_sage(pari(x))
-
+    if not type(x).__module__.startswith('sage'):
+        x = gen_to_sage(pari(f'{x}'))
+    
     # convert number to decimal or scientific format based on complexity
     def general_format(x): return '{:g}'.format(float(x))
 
