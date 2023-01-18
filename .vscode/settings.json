@@ -1,4 +1,7 @@
 {
+    "files.associations": {
+        "*.sage": "python"
+    },
     "task.allowAutomaticTasks": "on",
     "git.pullTags": false,
     "git.mergeEditor": true,
