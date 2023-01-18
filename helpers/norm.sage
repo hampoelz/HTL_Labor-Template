@@ -1,8 +1,12 @@
 from sage.all import *
 from sage.structure.element import is_Vector, is_Matrix
+from sage.libs.pari.convert_sage import gen_to_sage
 
 
 def norm(x, n=None):
+    # convert input to sage object
+    x = gen_to_sage(pari(x))
+
     # convert number to decimal or scientific format based on complexity
     def general_format(x): return '{:g}'.format(float(x))
 
