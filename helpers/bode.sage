@@ -1,5 +1,7 @@
+if not sage:
+    from sage.all import *
+
 import numpy as np
-from sage.all import *
 from scipy import signal
 
 

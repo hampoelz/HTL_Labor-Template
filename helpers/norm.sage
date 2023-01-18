@@ -1,4 +1,6 @@
-from sage.all import *
+if not sage:
+    from sage.all import *
+
 from sage.structure.element import is_Vector, is_Matrix
 from sage.libs.pari.convert_sage import gen_to_sage
 
