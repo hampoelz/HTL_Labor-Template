@@ -11,6 +11,7 @@ class Bode:
         self.omeg = 2*np.pi*self.freq
         self.sys = self.expr_to_system()
         self.data = signal.bode(self.sys, self.omeg)
+        self.step = signal.step(self.sys)
 
     def expr_to_system(self):
         expr = self.expr    # eg. (L*s)/(R+L*s)
@@ -57,3 +58,7 @@ class Bode:
         f = self.freq
         w, mag_dB, pha = self.data
         return list(zip(f, pha))
+
+    def plot_data_step(self):
+        t, y = self.step
+        return list(zip(t, y))
