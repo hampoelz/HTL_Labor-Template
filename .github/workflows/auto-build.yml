@@ -22,11 +22,16 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    # Declares the repository safe and not under dubious ownership.
+    - name: Add repository to git safe directories
+      run: git config --global --add safe.directory $GITHUB_WORKSPACE
     - name: Build document
       run: |
         cp /usr/share/texmf/tex/latex/sagetex/sagetex.sty ./
         latexmk -g -f --interaction=nonstopmode
         cp out/main.pdf out/${{ github.event.repository.name }}.pdf
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:

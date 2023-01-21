@@ -184,7 +184,7 @@ exit
 
                 if not [!commit_date!] == [] set "commit_date={!commit_date!}"
                 if not [!commit_sha!] == [] set "commit_sha={!commit_sha!}"
-                if not [!commit_msg!] == [] set "commit_msg={\directlua{tex.sprint(-2, "\luaescapestring{!commit_msg!}")}}"
+                if not [!commit_msg!] == [] set "commit_msg={\directlua{tex.sprint(-2, "\luaescapestring{\unexpanded{!commit_msg!}}")}}"
                 if not [!commit_author!] == [] set "commit_author={!commit_author!}"
 
                 if not [!github_sha_url!] == [] set "github_sha_url=[!github_sha_url!]"
