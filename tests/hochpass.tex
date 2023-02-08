@@ -89,3 +89,39 @@ Angaben: $R = \var{R}\Omega$, $f_{g} = \var{f_g}\Omega$
     \end{subfigure}
     \caption{Amplituden- und Phasengang des RL-Hochpasses}
 \end{figure}
+
+\begin{sagesilent}
+    bode_plot_step_response = list_plot(
+        bode.plot_data_step(),
+        figsize=[5.5,2],
+        axes_labels=['Zeit in $s$', 'Amplitude'],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True,
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{bode_plot_step_response}
+    \caption{Sprungantwort des RL-Hochpasses}
+\end{figure}
+
+\begin{sagesilent}
+    bode_plot_group_delay = list_plot(
+        bode.plot_data_freq_gd(f_stop=1500),
+        figsize=[5.5,2],
+        axes_labels=['Frequenz in $Hz$', 'Zeit in $s$'],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True,
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{bode_plot_group_delay}
+    \caption{Gruppenlaufzeit des RL-Hochpasses}
+\end{figure}
