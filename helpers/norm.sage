@@ -9,12 +9,14 @@ def norm(x, n=None):
     # convert input to sage object
     if not type(x).__module__.startswith('sage'):
         x = gen_to_sage(pari(f'{x}'))
-    
+
     # convert number to decimal or scientific format based on complexity
     def general_format(x): return '{:g}'.format(float(x))
 
     # execute sage's "numerical_approx" function if the number contains decimals, otherwise return an integer
     def numerical_approx(x, digits=None):
+        if n == 0:
+            return Integer(f"{float(x):.0f}")
         x = x.n(digits=digits)
         value = general_format(x)
         if not n and not '.' in value:
@@ -27,11 +29,13 @@ def norm(x, n=None):
         value = value.replace('-', '') # remove minus sign to get correct length of number
         if 'e' in value:
             value = value.split('e')[0]
-        length = [len(value), n or 1]  # 1 = default number of decimal places
+        # 1 = default number of decimal places
+        length = [len(value), n if n is not None and n >= 0 else 1]
         if '.' in value:
             value = value.split('.')
             r_len = 0 if value[0] == '0' else len(value[0])
-            l_len = n or len(value[1])  # Use custom 'n' decimals if defined
+            # Use custom 'n' decimals if defined
+            l_len = n if n is not None and n >= 0 else len(value[1])
             length = [r_len, l_len]
         return length
 
@@ -49,7 +53,7 @@ def norm(x, n=None):
     def approx(x, length=None):
         if not length:
             length = approx_length(x)
-        
+
         # handle complex numbers
         if hasattr(x, 'real') and hasattr(x, 'imag') and x.imag():
             x_real = numerical_approx(x.real(), digits=length)
@@ -59,7 +63,7 @@ def norm(x, n=None):
             v = vector([x_real, x_imag])
             R = v.base_ring()
             return R[['i']](v.list())
-        
+
         return numerical_approx(x, digits=length)
 
     # handle vectors
