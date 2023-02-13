@@ -1,4 +1,4 @@
-if not sage:
+if not 'sage' in globals():
     from sage.all import *
 
 import numpy as np

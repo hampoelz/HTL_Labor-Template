@@ -1,4 +1,4 @@
-if not sage:
+if not 'sage' in globals():
     from sage.all import *
 
 from sage.structure.element import is_Vector, is_Matrix
