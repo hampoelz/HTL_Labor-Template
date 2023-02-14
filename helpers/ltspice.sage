@@ -34,9 +34,6 @@ class LTSpice:
         def export(wave_index):
             return list(zip(x, y[wave_index]))
 
-        if len(waveforms) == 1:
-            return export(0)
-
         plot_data = dict()
         for i in range(len(waveforms)):
             plot_data[waveforms[i]] = export(i)
@@ -82,9 +79,6 @@ class LTSpice:
             plot_data_mag = list(zip(x, mag[wave_index]))
             plot_data_pha = list(zip(x, pha[wave_index]))
             return plot_data_mag, plot_data_pha
-
-        if len(waveforms) == 1:
-            return export(0)
 
         plot_data = dict()
         for i in range(len(waveforms)):
@@ -135,9 +129,6 @@ class LTSpice:
             plot_data_amp = list(zip(x, data_amp))
             plot_data_pha = list(zip(x, data_pha))
             return plot_data_amp, plot_data_pha
-
-        if len(waveforms) == 1:
-            return export(0)
 
         plot_data = dict()
         for i in range(len(waveforms)):
