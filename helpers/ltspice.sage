@@ -19,17 +19,17 @@ class LTSpice:
 
         data = np.genfromtxt(filepath, skip_header=1,
                              delimiter='\t', encoding="latin-1")
-        for value in data:
-            if np.isnan(value[0]):
+        for entry in data:
+            if np.isnan(entry[0]):
                 continue
 
             for i in range(len(waveforms)):
-                if np.isnan(value[i + 1]):
+                if np.isnan(entry[i + 1]):
                     break
             else:
-                x.append(value[0])
+                x.append(entry[0])
                 for i in range(len(waveforms)):
-                    y[i].append(value[i + 1])
+                    y[i].append(entry[i + 1])
 
         def export(wave_index):
             return list(zip(x, y[wave_index]))
