@@ -8,16 +8,25 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  TEXMFDIR: /usr/local/texlive
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
-    #container: texlive/texlive:latest
+    container:
+      image: sagemath/sagemath:latest
+      options: --user root
     steps:
     - name: Install required tools
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y jq texlive-full sagemath inkscape
+        apt-get update -y
+        apt-get install -y wget git jq inkscape ghostscript imagemagick
+        mkdir install-tl && cd install-tl 
+        wget -O - -- http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar xzf - --strip-components=1 
+        ./install-tl --texdir "$TEXMFDIR" --no-doc-install --no-src-install --no-interaction
+        echo "$TEXMFDIR/bin/x86_64-linux/" >> $GITHUB_PATH
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
@@ -27,7 +36,7 @@ jobs:
       run: git config --global --add safe.directory $GITHUB_WORKSPACE
     - name: Build document
       run: |
-        cp /usr/share/texmf/tex/latex/sagetex/sagetex.sty ./
+        cp "$(find / -name "sagetex.sty" -print -quit)" ./
         latexmk -g -f --interaction=nonstopmode
         cp out/main.pdf out/${{ github.event.repository.name }}.pdf
       env:
