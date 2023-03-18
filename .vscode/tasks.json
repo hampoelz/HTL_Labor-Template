@@ -8,7 +8,7 @@
             "type": "shell",
             "command": "./scripts/clean.sh",
             "windows": {
-                "command": "./scripts/clean.bat"
+                "command": ".\\scripts\\clean.bat"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -27,7 +27,7 @@
             "command": "./scripts/update.sh",
             "args": [ "--${input:abort}" ],
             "windows":{
-                "command": "./scripts/update.bat",
+                "command": ".\\scripts\\update.bat",
                 "args": [ "/${input:abort}" ]
             },
             "options": {
@@ -48,7 +48,7 @@
                 "--check"
             ],
             "windows": {
-                "command": "./scripts/update.bat",
+                "command": ".\\scripts\\update.bat",
                 "args": [
                     "/check"
                 ]
@@ -71,7 +71,7 @@
             "type": "shell",
             "command": "echo Sorry your platform is not yet supported!",
             "windows": {
-                "command": "./scripts/install.bat",
+                "command": ".\\scripts\\install.bat",
                 "args": [ "/installonly" ]
             },
             "options": {

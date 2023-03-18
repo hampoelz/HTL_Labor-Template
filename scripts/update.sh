@@ -52,10 +52,10 @@ function show_usage()
 
 function pull_script()
 {
-    function realpath() { echo $(cd $(dirname "$1"); pwd)/$(basename "$1"); }
+    function realpath() { echo $(cd "$(dirname "$1")"; pwd)/$(basename "$1"); }
     
     script_path="$(realpath $1)"
-    if [ "$(realpath $0)" == "$script_path" ]; then return 0; fi
+    if [ "$(realpath "$0")" == "$script_path" ]; then return 0; fi
     if [ -d "$(dirname "$script_path")" ]; then
         echo Pull latest update script ...
         curl -sL "$script_url" -o "$script_path"

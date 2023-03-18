@@ -154,10 +154,10 @@ function start()
                 if [ "$commit_date" != "" ]; then commit_date="{$commit_date}"; fi
                 if [ "$commit_sha" != "" ]; then commit_sha="{$commit_sha}"; fi
                 if [ "$commit_msg" != "" ]; then commit_msg="{\directlua{tex.sprint(-2, \"\luaescapestring{\unexpanded{$commit_msg}}\")}}"; fi
-                if [ "$commit_author" != "" ]; then commit_author="{$commit_author}"; fi
+                if [ "$commit_author" != "" ]; then commit_author="{\directlua{tex.sprint(-2, \"\luaescapestring{\unexpanded{$commit_author}}\")}}"; fi
 
                 if [ "$github_sha_url" != "" ]; then github_sha_url="[$github_sha_url]"; fi
-                if [ "$github_author_url" != "" ]; then github_author_url="[$github_author_url]"; fi
+                if [ "$github_author_url" != "" ]; then github_author_url="[\directlua{tex.sprint(-2, \"\luaescapestring{\unexpanded{$github_author_url}}\")}]"; fi
 
                 # output combined data
                 echo "\\$prefix_entry$commit_date$commit_sha$github_sha_url$commit_author$github_author_url$github_author_avatar_file$commit_msg"
