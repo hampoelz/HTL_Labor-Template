@@ -17,6 +17,8 @@ set "cwd_template=%cd%\LatexTemplate"
 set "cwd_vscode=%LocalAppData%\Programs\Microsoft VS Code\bin"
 set "cwd_texlive=%LocalAppData%\Programs\TeXLive"
 set "cwd_git=%LocalAppData%\Programs\Git"
+set "cwd_sagemath=%LocalAppData%\Programs\SageMath"
+set "cwd_sagemath_wrapper=%cwd_sagemath%\wrapper"
 
 set "refresh_env_url=https://raw.githubusercontent.com/hampoelz/LaTeX-Template/main/scripts/refreshenv.bat"
 
@@ -29,6 +31,12 @@ set "setup_texlive=texlive.zip"
 set "setup_git_url=https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/PortableGit-2.37.3-64-bit.7z.exe"
 set "setup_git=portablegit.exe"
 
+set "setup_sagemath_wrapper_url=https://raw.githubusercontent.com/%gh_repo%/%remote_branch%/scripts/sage.bat"
+set "setup_sagemath_url=https://github.com/sagemath/sage-windows/releases/download/0.6.2-9.2/SageMath-9.2-Installer-v0.6.2.exe"
+set "setup_sagemath=sagemath.exe"
+
+set "setup_inkscape_url=https://inkscape.org/gallery/item/37366/inkscape-1.2.2_2022-12-09_732a01da63-x64.msi"
+
 set "setup_template_url=https://raw.githubusercontent.com/%gh_repo%/%remote_branch%/scripts/update.bat"
 set "setup_template=template.bat"
 
@@ -38,7 +46,7 @@ echo     This script installs and configures all required
 echo       software to use the latex template repository
 echo.
 echo     The following software will be installed:
-echo       vs-code, texlive, git
+echo       vs-code, texlive, sagemath, git
 echo.
 echo     The following vs-code addons will be installed:
 echo       latex-workshop, latex-utilities,
@@ -69,6 +77,8 @@ call:check_miktex
 call:setup_vscode
 call:setup_git
 call:setup_texlive
+call:setup_sagemath
+call:synchronize_sagemath
 call:configure_vscode
 call:configure_git
 
@@ -436,6 +446,96 @@ exit
 
     call git config --global user.email "%mail%"
     call git config --global user.name "%name%"
+    goto:EOF
+
+:setup_sagemath
+    call sage --help >nul 2>&1 && goto:EOF
+
+    echo.
+    echo ========================================================
+    echo              Download and install SageMath
+    echo ========================================================
+    echo.
+    cd "%cwd_setup%"
+    call curl -L "%setup_sagemath_url%" -o %setup_sagemath% && (
+        echo installing ...
+        call .\%setup_sagemath% /VERYSILENT /CURRENTUSER /NORESTART /SETUPTYPE=custom /COMPONENTS=sage /MERGETASKS="!desktop" /LOG="%cwd_setup%\%setup_sagemath%.log" && (
+            echo registering ...
+            mkdir "%cwd_sagemath_wrapper%"
+            call curl -L "%setup_sagemath_wrapper_url%" -o "%cwd_sagemath_wrapper%\sage.bat" && (
+                call:add_env "%cwd_sagemath_wrapper%"
+
+                echo -------- cleanup ---------
+                del %setup_sagemath%
+                echo --------------------------
+
+                goto:EOF
+            )
+        )
+    )
+
+    echo -------- cleanup ---------
+    if exist "%setup_sagemath%" del %setup_sagemath%
+    rmdir /s /q "%cwd_sagemath%"
+    echo --------------------------
+
+    echo.
+    echo --------------------------------------------
+    echo  Error:
+    echo.
+    echo  The installation of SageMath failed! Try
+    echo  to install it manually and run this script
+    echo  again. More informations are available on
+    echo  the official website.
+    echo.
+    echo  see: https://www.sagemath.org/
+    echo -------------------------------------------- 
+    echo.
+    pause
+    exit
+
+:synchronize_sagemath
+    echo synchronize texlive with sagemath ...
+    call:refresh_env
+
+    set "texmflocal_path="
+    for /f "usebackq delims=" %%a in (`"kpsewhich -var-value=TEXMFLOCAL"`) do set "texmflocal_path=%%a"
+
+    set "sagetex_path="
+    cd "%SystemDrive%\"
+    for /f "usebackq delims=" %%a in (`dir /b /s /a:-d "sagetex.sty"`) do set "sagetex_path=%%~fa\..\..\..\..\"
+    cd "%cwd_setup%"
+
+    if not exist "%sagetex_path%\" (
+        echo.
+        echo --------------------------------------------
+        echo  Error:
+        echo.
+        echo  SageMath cannot be found for synchron-
+        echo  ization with TeXLive, possibly your
+        echo  installation is corrupted.
+        echo -------------------------------------------- 
+        echo.
+        pause
+        exit
+    )
+
+    if not exist "%texmflocal_path%\" (
+        echo.
+        echo --------------------------------------------
+        echo  Error:
+        echo.
+        echo  TeXLive cannot be found for synchron-
+        echo  ization with SageMath, possibly your
+        echo  installation is corrupted.
+        echo -------------------------------------------- 
+        echo.
+        pause
+        exit
+    )
+
+    xcopy "%sagetex_path%\" "%texmflocal_path%\" /s /e /y
+    texhash "%texmflocal_path%/"
     goto:EOF
 
 :setup_template
