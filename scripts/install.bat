@@ -465,6 +465,8 @@ exit
             call curl -L "%setup_sagemath_wrapper_url%" -o "%cwd_sagemath_wrapper%\sage.bat" && (
                 call:add_env "%cwd_sagemath_wrapper%"
 
+                call sage -c "exit"
+
                 echo -------- cleanup ---------
                 del %setup_sagemath%
                 echo --------------------------
@@ -564,7 +566,7 @@ exit
     cd "%cwd_template%"
     call git init
     call cmd /k "%cwd_setup%\%setup_template%"
-    call latexmk -g --interaction=nonstopmode
+    call latexmk -g -f --interaction=nonstopmode
     cd "%cwd_setup%"
     goto:EOF
 
