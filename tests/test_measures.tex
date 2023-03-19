@@ -78,8 +78,30 @@ Datenblatt: $U_{ZD} = \var{U_ZD}V$, $U_{ZD_{max}} = \var{U_ZD_max}V$, $U_{BE} = 
 
 \begin{figure}[H]
     \centering
-    \includesvg[width=\textwidth]{tests/test_measures.svg}
-    \caption{Ausgangskennlinie \textbf{$U_{a} = f(R_L)$} der Simulation}
+    \includesvg[width=0.8\textwidth]{tests/simulations/export/test_measures.svg}
+    \caption{Ausgangskennlinie \textbf{$U_{a} = f(R_L)$} der Simulation \textit{(als svg eingebunden)}}
+\end{figure}
+
+\begin{sagesilent}
+    simulation_data = LTSpice.plot_data("tests/simulations/export/test_measures.txt")
+    simulation_data_ohm_volt = simulation_data["V(out)"]
+
+    simulation_plot = list_plot(
+        simulation_data_ohm_volt,
+        color='#148873',
+        figsize=[5,2],
+        axes_labels=['$R_L$ in $\Omega$', '$U_a$ in $V$'],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{simulation_plot}
+    \caption{Ausgangskennlinie \textbf{$U_{a} = f(R_L)$} der Simulation \textit{(importiert von ltspice)}}
 \end{figure}
 
 \subsection{Auswertung}
