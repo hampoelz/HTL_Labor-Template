@@ -35,8 +35,6 @@ set "setup_sagemath_wrapper_url=https://raw.githubusercontent.com/%gh_repo%/%rem
 set "setup_sagemath_url=https://github.com/sagemath/sage-windows/releases/download/0.6.2-9.2/SageMath-9.2-Installer-v0.6.2.exe"
 set "setup_sagemath=sagemath.exe"
 
-set "setup_inkscape_url=https://inkscape.org/gallery/item/37366/inkscape-1.2.2_2022-12-09_732a01da63-x64.msi"
-
 set "setup_template_url=https://raw.githubusercontent.com/%gh_repo%/%remote_branch%/scripts/update.bat"
 set "setup_template=template.bat"
 
