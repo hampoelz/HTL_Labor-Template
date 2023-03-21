@@ -1,5 +1,5 @@
 ::
-:: Copyright (c) 2022 Rene Hampölz
+:: Copyright (c) 2023 Rene Hampölz
 ::
 :: Use of this source code is governed by an MIT-style
 :: license that can be found in the LICENSE file under

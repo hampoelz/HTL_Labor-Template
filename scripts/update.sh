@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022 Rene Hampölz
+# Copyright (c) 2023 Rene Hampölz
 #
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file under
@@ -66,15 +66,17 @@ function pull_script()
 
 function check_internet()
 {
-    timeout 1 ping github.com -c 1 &> /dev/null || {
-        echo
-        echo "========================================================"
-        echo "              Unable to connect to github!              "
-        echo "          Please check your internet connection         "
-        echo "========================================================"
-        echo
-        exit
-    }
+    if [ ! "${CI}" ]; then
+        timeout 1 ping github.com -c 1 &> /dev/null || {
+            echo
+            echo "========================================================"
+            echo "              Unable to connect to github!              "
+            echo "          Please check your internet connection         "
+            echo "========================================================"
+            echo
+            exit
+        }
+    fi
 }
 
 function check_git()

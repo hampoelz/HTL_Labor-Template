@@ -1,5 +1,5 @@
 ::
-:: Copyright (c) 2017 - 2022 Chocolatey Software, Inc
+:: Copyright (c) 2017 - 2023 Chocolatey Software, Inc
 :: Code available on https://github.com/chocolatey/choco/blob/stable/src/chocolatey.resources/redirects/RefreshEnv.cmd
 ::
 :: Batch file to read environment variables from registry and
