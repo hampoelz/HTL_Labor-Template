@@ -1,3 +1,6 @@
+if not 'sage' in globals():
+    from sage.all import *
+
 import numpy as np
 from scipy import interpolate
 from scipy import ndimage

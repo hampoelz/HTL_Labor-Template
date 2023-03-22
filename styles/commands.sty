@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2022 Rene Hampölz
+% Copyright (c) 2023 Rene Hampölz
 %
 % Use of this source code is governed by an MIT-style
 % license that can be found in the LICENSE file under
@@ -10,14 +10,7 @@
 %  Enable or disable packages and/or commands 
 % ============================================
 
-% ----- no additional packages required ------
-
-% usage: \tsize<size>{<Text>}
-% sizes: tiny, script, footnote, small, normal, large, Large, LARGE, huge, Huge
-% example:
-%   \tsizetiny{lorem ipsum}
-%   \tsizeHuge{lorem ipsum}
-%
+% ----------- custom text size -----------
 \newcommand{\tsizetiny}[1]{{\tiny #1}}
 \newcommand{\tsizescript}[1]{{\scriptsize #1}}
 \newcommand{\tsizefootnote}[1]{{\footnotesize #1}}
@@ -29,8 +22,35 @@
 \newcommand{\tsizehuge}[1]{{\huge #1}}
 \newcommand{\tsizeHuge}[1]{{\Huge #1}}
 
-% usage: \maketitletoc
-%
+% --------- unnumbered sections ----------
+\newcommand{\unnumberedPart}[1]{\part*{#1}\addcontentsline{toc}{part}{#1}}
+\newcommand{\unnumberedSection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\unnumberedSubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+\newcommand{\unnumberedSubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
+\newcommand{\unnumberedParagraph}[1]{\paragraph*{#1}\addcontentsline{toc}{paragraph}{#1}}
+\newcommand{\unnumberedSubparagraph}[1]{\subparagraph*{#1}\addcontentsline{toc}{subparagraph}{#1}}
+
+% ---------- section title page ----------
+\newcommand{\bigsection}[2][]{
+    \def\hrulefill{\leavevmode\leaders\hrule height 0.5ex depth \dimexpr -0.5ex+0.4pt \hfill\kern 0pt}
+    \clearpage\null
+    \par\refstepcounter{section}
+    \addcontentsline{toc}{section}{\protect\numberline{\thesection}#2}
+    \if\relax\detokenize{#1}\relax\else\label{#1}\fi
+    \null\vfill\vspace{-2em}
+    \begin{center}%
+        \Huge%
+        \textbf{\thesection}%
+        \\\vspace{0.5ex}%
+        \hrulefill\\%
+        \textbf{#2}%
+        \\\hrulefill%
+    \end{center}
+    \vfill\break
+    \clearpage
+}
+
+% --------- center title and toc ---------
 \newcommand{\maketitletoc}{               % ┝ make title, include toc and center vertically with a slight offset
     \null\nointerlineskip\vfill           % |
     \let\snewpage\newpage                 % |
@@ -43,34 +63,19 @@
     \vfill\break                          % |
 }                                         % |
 
-% ----------- using xcolor package -----------
-\usepackage{xcolor}                         % enable colour management
-
-% usage: \hl{<Text>}
-%
+% ------------ highlight text ------------
+\usepackage{xcolor}
 \newcommand{\hl}[1]{\colorbox[HTML]{FBF719}{#1}}
 
-% ----------- using array package ------------
-\usepackage{array}                          % extend options for column formats
-
-% usage
-%   \begin{tabular}{ L{<width>} C{<width>} R{<width>} }
-%     ...
-%   \end{tabular}
-%
+% --- align columns with custom width ----
+\usepackage{array}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}   % left aligned column with custom width
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}     % center aligned column with custom width
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}    % right aligned column with custom width
 
-% ---------- using enumitem package ----------
-% \usepackage{enumitem}                       % control layout of list environments
-
-% usage:
-%   \begin{titled}{<Title>}
-%     ...
-%   \end{titled}
-%
-% \usepackage{calc}                           % perform arithmetic on the arguments of latex commands
+% ---------- titled-environment ----------
+% \usepackage{enumitem}
+% \usepackage{calc}
 % \newenvironment{titled}[1]{                 % ┝ indent the content by the length of the title
 %     \begin{description}[%                   % |
 %             leftmargin=%                    % | example:
@@ -85,14 +90,8 @@
 %     \end{description}                       % |                Lorem ipsum
 % }                                           % |                ...
 
-% --------- using tcolorbox package ----------
-% \usepackage[most]{tcolorbox}              % coloured and framed text boxes with a heading line
-
-% usage:
-%   \begin{restofpage}[<options>]
-%     ...
-%   \end{restofpage}
-%
+% ----- box with remaining page size -----
+% \usepackage[most]{tcolorbox}
 % \newtcolorbox{restofpage}[1][]{           % ┝ create a new box environment with the '\restspace' command in it with the
 %  enhanced,                                % |  height set to the rest of the current page's available vertical space
 %  frame hidden,                            % |
@@ -102,8 +101,8 @@
 %  #1                                       % |   \end{restofpage}
 % }                                         % |
 
-% usage: \graybox{<Text>}
-%
+% --------------- gray box ---------------
+% \usepackage[most]{tcolorbox}
 % \newcommand{\graybox}[1]{%                % ┝ create a simple gray box with text for a few notes
 %     \begin{tcolorbox}[%                   % |
 %         enhanced,%                        % |

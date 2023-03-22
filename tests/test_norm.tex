@@ -1,0 +1,118 @@
+\begin{sagesilent}
+    def compare(num, num_expected, options=None):
+        num_result = str(norm(num, options))
+        num_result_strip = " ".join(num_result.split())
+        if num_result_strip != num_expected:
+            raise SystemExit('Error: norm() unit test failed!')
+        return "ok"
+\end{sagesilent}
+
+\newcommand{\compare}[3][None]{
+    \def\expected{#3}
+    \begin{flushleft}
+        Standardmäßige Darstellung mit \texttt{{\textbackslash}sage}: \quad $\sage{#2}$\\
+        Darstellung mit der Hilfsfunktion \texttt{{\textbackslash}var }: \quad $\var{#2, #1}$
+    \end{flushleft}
+    Test Passed: \sagestr{compare(#2, "#3", #1)}
+}
+
+% Failing Test: 3.0000 != 3.00
+% \compare[4]{3}{3.00}
+
+\section{Numerische Darstellungen \textit{(von Berechnungen)}}
+
+\subsection{Ganze Zahlen}
+\compare{3}{3}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3}{3.0000}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{3}{3}
+
+\subsubsection{Große Zahlen}
+\compare{3140000}{3.14e6}
+
+\subsection{Rationale Zahlen}
+\compare{22/7}{3.14286}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{22/7}{3}
+
+\subsection{Reelle Zahlen}
+\compare{3.14}{3.14}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3.14}{3.1400}
+
+\subsubsection{Auf 4 Dezimalstellen runden}
+\compare[4]{3.14159265359}{3.1416}
+
+\subsubsection{Mit vielen Dezimalstellen}
+\compare{3.14159265359}{3.14159}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{3.14159265359}{3}
+
+\subsubsection{Kleine Zahlen}
+\compare{0.00000314}{3.14e-6}
+
+\subsubsection{Große Zahlen}
+\compare{3140000.0}{3.14e6}
+
+\subsection{Komplexe Zahlen}
+\compare{3+6*I}{3 + 6*i}
+
+\subsubsection{Auf 4 Dezimalstellen erweitern}
+\compare[4]{3.14+6.28*I}{3.1400 + 6.2800*i}
+
+\subsubsection{Auf 4 Dezimalstellen runden}
+\compare[4]{3.14159265359+6.2831853072*I}{3.1416 + 6.2832*i}
+
+\subsubsection{Mit vielen Dezimalstellen}
+\compare{3.14159265359+6.2831853072*I}{3.14159 + 6.28319*i}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{3.14159265359+6.2831853072*I}{3 + 6*i}
+
+\subsubsection{Kleine Zahlen}
+\compare{00.00000314+0.628*I}{3.140e-6 + 0.6280*i}
+
+\subsubsection{Große Zahlen}
+\compare{3140000+62800000*I}{3.14e6 + 6.28e7*i}
+
+\subsection{Vektoren}
+\compare{vector([3,6,-9])}{(3, 6, -9)}
+
+\subsubsection{Mit komplexen Zahlen}
+\compare{vector([3+6*I,6-3*I,-9+6*I])}{(3 + 6*i, 6 - 3*i, -9 + 6*i)}
+
+\subsubsection{Mit reellen Zahlen}
+\compare{vector([3.14,6.28,-9.42])}{(3.14, 6.28, -9.42)}
+
+\subsubsection{Mit \textit{(kleinen/großen)} reellen und komplexen Zahlen}
+\compare{vector([3140000,3.14159+6.28318*I,-0.00000314])}{(3.14000e6, 3.14159 + 6.28318*i, -3.14000e-6)}
+
+\subsubsection{Auf 4 Dezimalstellen runden/erweitern}
+\compare[4]{vector([3140000,3.14159+6.28318*I,-0.00000314])}{(3.1400e6, 3.1416 + 6.2832*i, -3.1400e-6)}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{vector([3140000,3.14159+6.28318*I,-0.00000314])}{(3140000, 3 + 6*i, 0)}
+
+\subsection{Matrizen}
+\compare{Matrix([[3,6,-9],[9,6,3],[3,3,3]])}{[ 3 6 -9] [ 9 6 3] [ 3 3 3]}
+
+\subsubsection{Mit komplexen Zahlen}
+\compare{Matrix([[3+6*I,6-3*I,-9+6*I], [9+6*I,6-3*I,3+6*I], [3+6*I,3+6*I,3+6*I]])}{[ 3 + 6*i 6 - 3*i -9 + 6*i] [ 9 + 6*i 6 - 3*i 3 + 6*i] [ 3 + 6*i 3 + 6*i 3 + 6*i]}
+
+\subsubsection{Mit reellen Zahlen}
+\compare{Matrix([[3.1,6.3,-9],[9,6.3,3.1],[3.1,3.1,3.1]])}{[ 3.1 6.3 -9.0] [ 9.0 6.3 3.1] [ 3.1 3.1 3.1]}
+
+\subsubsection{Mit \textit{(kleinen/großen)} reellen und komplexen Zahlen}
+\compare{Matrix([[3140000,3.14159+6.28318*I,-0.00000314],[-0.00000314,3140000,3.95141+6.28318*I],[3140000,3140000,3140000]])}{[ 3.14000e6 3.14159 + 6.28318*i -3.14000e-6] [ -3.14000e-6 3.14000e6 3.95141 + 6.28318*i] [ 3.14000e6 3.14000e6 3.14000e6]}
+
+\subsubsection{Auf 4 Dezimalstellen runden/erweitern}
+\compare[4]{Matrix([[3140000,3.14159+6.28318*I,-0.00000314],[-0.00000314,3140000,3.95141+6.28318*I],[3140000,3140000,3140000]])}{[ 3.1400e6 3.1416 + 6.2832*i -3.1400e-6] [ -3.1400e-6 3.1400e6 3.9514 + 6.2832*i] [ 3.1400e6 3.1400e6 3.1400e6]}
+
+\subsubsection{Ohne Dezimalstellen}
+\compare[0]{Matrix([[3140000,3.14159+6.28318*I,-0.00000314],[-0.00000314,3140000,3.95141+6.28318*I],[3140000,3140000,3140000]])}{[3140000 3 + 6*i 0] [ 0 3140000 4 + 6*i] [3140000 3140000 3140000]}

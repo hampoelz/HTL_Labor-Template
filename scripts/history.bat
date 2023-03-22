@@ -1,5 +1,5 @@
 ::
-:: Copyright (c) 2022 Rene Hampölz
+:: Copyright (c) 2023 Rene Hampölz
 ::
 :: Use of this source code is governed by an MIT-style
 :: license that can be found in the LICENSE file under
@@ -184,11 +184,11 @@ exit
 
                 if not [!commit_date!] == [] set "commit_date={!commit_date!}"
                 if not [!commit_sha!] == [] set "commit_sha={!commit_sha!}"
-                if not [!commit_msg!] == [] set "commit_msg={\directlua{tex.sprint(-2, "\luaescapestring{!commit_msg!}")}}"
-                if not [!commit_author!] == [] set "commit_author={!commit_author!}"
+                if not [!commit_msg!] == [] set "commit_msg={\directlua{tex.sprint(-2, "\luaescapestring{\unexpanded{!commit_msg!}}")}}"
+                if not [!commit_author!] == [] set "commit_author={\directlua{tex.sprint(-2, "\luaescapestring{\unexpanded{!commit_author!}}")}}"
 
                 if not [!github_sha_url!] == [] set "github_sha_url=[!github_sha_url!]"
-                if not [!github_author_url!] == [] set "github_author_url=[!github_author_url!]"
+                if not [!github_author_url!] == [] set "github_author_url=[\directlua{tex.sprint(-2, "\luaescapestring{\unexpanded{!github_author_url!}}")}]"
 
                 :: output combined data
                 echo.\%prefix_entry%!commit_date!!commit_sha!!github_sha_url!!commit_author!!github_author_url!!github_author_avatar_file!!commit_msg!

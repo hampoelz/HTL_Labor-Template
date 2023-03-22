@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022 Rene Hampölz
+# Copyright (c) 2023 Rene Hampölz
 #
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file under
@@ -52,10 +52,10 @@ function show_usage()
 
 function pull_script()
 {
-    function realpath() { echo $(cd $(dirname "$1"); pwd)/$(basename "$1"); }
+    function realpath() { echo $(cd "$(dirname "$1")"; pwd)/$(basename "$1"); }
     
     script_path="$(realpath $1)"
-    if [ "$(realpath $0)" == "$script_path" ]; then return 0; fi
+    if [ "$(realpath "$0")" == "$script_path" ]; then return 0; fi
     if [ -d "$(dirname "$script_path")" ]; then
         echo Pull latest update script ...
         curl -sL "$script_url" -o "$script_path"
@@ -66,15 +66,17 @@ function pull_script()
 
 function check_internet()
 {
-    timeout 1 ping github.com -c 1 &> /dev/null || {
-        echo
-        echo "========================================================"
-        echo "              Unable to connect to github!              "
-        echo "          Please check your internet connection         "
-        echo "========================================================"
-        echo
-        exit
-    }
+    if [ ! "${CI}" ]; then
+        timeout 1 ping github.com -c 1 &> /dev/null || {
+            echo
+            echo "========================================================"
+            echo "              Unable to connect to github!              "
+            echo "          Please check your internet connection         "
+            echo "========================================================"
+            echo
+            exit
+        }
+    fi
 }
 
 function check_git()

@@ -3,6 +3,7 @@
         "james-yu.latex-workshop",
         "tecosaur.latex-utilities",
         "streetsidesoftware.code-spell-checker",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "vscode-icons-team.vscode-icons"
     ]
 }
