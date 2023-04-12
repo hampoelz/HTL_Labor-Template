@@ -2,7 +2,7 @@
 
 ➡ **Vorkonfiguriertes LaTeX-Dokument** - _Optimiert für den [VS-Code](https://code.visualstudio.com/)-Editor und der [Git](https://git-scm.com/)/[Github](https://github.com/)-Versionskontrolle_
 
-> ℹ️ Dieses Projekt stellt Konfigurationen und Skripte bereit, um die Produktivität von Power-Usern zu steigern und Neulingen den Einstieg in LaTeX zu erleichtern. Es basiert auf der Vorlage [`hampoelz/HTL_LaTeX-Template`](https://github.com/hampoelz/HTL_LaTeX-Template) mit Anpassungen für den Technischen gebrauch. Das Template enthält unter anderem ein vollintegriertes Computeralgebrasystem _([SageMath](https://www.sagemath.org/))_, welches viele hochspezialisierte Systeme und numerische Bibliotheken vereint und eine auf Python basierende Sprache verwendet.
+> ℹ️ Dieses Projekt stellt Konfigurationen und Skripte bereit, um die Produktivität von Power-Usern zu steigern und Neulingen den Einstieg in LaTeX zu erleichtern. Es basiert auf den beiden Vorlagen [`hampoelz/HTL_LaTeX-Template`](https://github.com/hampoelz/HTL_LaTeX-Template) und [`hampoelz/LaTeX-Science-Template`](https://github.com/hampoelz/LaTeX-Science-Template). Somit enthält das Template unter anderem ein vollintegriertes Computeralgebrasystem _([SageMath](https://www.sagemath.org/))_, welches viele hochspezialisierte Systeme und numerische Bibliotheken vereint und eine auf Python basierende Sprache verwendet.
 
 > ❗ Wichtiger Hinweis
 >
