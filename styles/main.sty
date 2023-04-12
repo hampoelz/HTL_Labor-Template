@@ -27,7 +27,7 @@
 %              Configurations             
 % ========================================
 
-% usages:
+% Benutzung:
 %   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#change-document-language
 %   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#git-history
 %   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#custom-document-font
@@ -35,18 +35,18 @@
 %   https://github.com/hampoelz/LaTeX-Science-Template/wiki/02-Usage#print-numbers
 
 % --------------- language ---------------
-\usepackage[english]{babel}             % english language
-% \usepackage[german]{babel}              % german language
+% \usepackage[english]{babel}             % english language
+\usepackage[german]{babel}              % german language
 
 % ----- auto-generate commit history -----
 % title of the generated history timeline
-\protected\def\HistoryTimelineTitle{Commit History}
+\protected\def\HistoryTimelineTitle{Änderungsverlauf}
 
 % maximum commits to show in the history timeline
 \def\HistoryTimelineLimit{5}
 
 % title of the generated history table
-\protected\def\HistoryTableTitle{Full Commit History}
+\protected\def\HistoryTableTitle{Vollständiger Änderungsverlauf}
 
 % maximum commits to show in the history table use '0' for no limit
 \def\HistoryTableLimit{0}
@@ -123,12 +123,13 @@
 %        Enable or disable packages       
 % ========================================
 
-% usage: https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#recommended-and-preconfigured-packages
+% Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#empfohlene-und-vorkonfigurierte-pakete
 
 % ------------ preconfigured -------------
 \usepackage{styles/history}             % auto-generate commit history - included packages: xparse, graphicx, calc, booktabs, ltablex, environ, ifplatform
 \usepackage{styles/commands}            % enable or disable predefined commands
 \usepackage{styles/science}             % technical and scientific styles - included packages: sagetex, siunitx, pdftexcmds, geometry
+\usepackage{styles/htbla}               % htbla weiz styles - included packages: xcolor, hyperref, geometry, fancyhdr, calc
 
 % --------- mathematical packages --------
 \usepackage{amsmath}                    % mathematical symbols

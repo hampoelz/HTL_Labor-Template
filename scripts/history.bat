@@ -6,7 +6,7 @@
 :: https://github.com/hampoelz/LaTeX-Template.
 ::
 
-:: usage: https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#git-history
+:: Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#git-versionsverlauf
 
 @echo off
 

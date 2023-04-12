@@ -6,9 +6,9 @@
 :: https://github.com/hampoelz/LaTeX-Template.
 ::
 
-:: usage:
-::   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#preconfigured-scriptstasks
-::   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#update
+:: Benutzung:
+::   https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-skriptetasks
+::   https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#aktualisieren
 
 @echo off
 

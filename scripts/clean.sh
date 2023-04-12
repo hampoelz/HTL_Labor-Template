@@ -6,7 +6,7 @@
 # https://github.com/hampoelz/LaTeX-Template.
 #
 
-# usage: https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#preconfigured-scriptstasks
+# Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-skriptetasks
 
 #!/bin/bash
 

@@ -6,7 +6,7 @@
 :: https://github.com/hampoelz/LaTeX-Template.
 ::
 
-:: usage: https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#preconfigured-scriptstasks
+:: Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-skriptetasks
 
 @echo off
 
@@ -236,7 +236,7 @@ exit
         set "installed_exts=!installed_exts! %%i"
     )
 
-    echo %installed_exts% | findstr "James-Yu.latex-workshop" | findstr "tecosaur.latex-utilities" | findstr "eamodio.gitlens" | findstr "streetsidesoftware.code-spell-checker" >nul 2>&1 || (
+    echo %installed_exts% | findstr "James-Yu.latex-workshop" | findstr "tecosaur.latex-utilities" | findstr "eamodio.gitlens" | findstr "streetsidesoftware.code-spell-checker" | findstr "streetsidesoftware.code-spell-checker-german" >nul 2>&1 || (
         echo.
         echo ========================================================
         echo    Install required and recommended VSCode extensions
@@ -247,6 +247,7 @@ exit
         call %cmd_vscode% --install-extension tecosaur.latex-utilities
         call %cmd_vscode% --install-extension eamodio.gitlens
         call %cmd_vscode% --install-extension streetsidesoftware.code-spell-checker
+        call %cmd_vscode% --install-extension streetsidesoftware.code-spell-checker-german
     )
 
     endlocal
