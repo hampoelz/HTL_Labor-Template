@@ -1,4 +1,4 @@
-# HTL Weiz LaTeX Vorlage _für Technischen gebrauch_
+# HTL Weiz LaTeX Vorlage _für Technischen Gebrauch_
 
 ➡ **Vorkonfiguriertes LaTeX-Dokument** - _Optimiert für den [VS-Code](https://code.visualstudio.com/)-Editor und der [Git](https://git-scm.com/)/[Github](https://github.com/)-Versionskontrolle_
 
