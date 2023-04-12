@@ -1,0 +1,172 @@
+\section{High-Pass}
+
+\subsection{Introduction}
+
+\begin{sagesilent}
+    f_g = 100
+    R = 195.5
+\end{sagesilent}
+
+Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
+
+\subsection{Circuit}
+
+\begin{figure}[H]
+    \centering
+    \begin{circuitikz}
+        \coordinate (in+) at (0,0);
+        \coordinate (in-) at (0,-2);
+
+        \draw
+        (in+) to[R, l^=$R$, a_=$\SIvar{R}{\ohm}$,o-] ++(4,0) coordinate (aux1)
+        to[short,-o] ++(2,0) coordinate (out+)
+
+        (aux1) to[cute inductor=$L$,*-*] (aux1 |- in-)
+
+        (in-) to[short,o-o] (in- -| out+) coordinate (out-)
+
+        (in+) to[open,name=inV,v] (in-)
+        (out+) to[open,name=outV,v^] (out-)
+        ;
+
+        \voltage{inV}{$V_{in}$}
+        \voltage{outV}{$V_{out}$}
+    \end{circuitikz}
+\end{figure}
+
+\subsection{Calculations}
+
+\begin{sagesilent}
+    L = R/(2*pi*f_g)
+\end{sagesilent}
+
+\begin{align*}
+    f_{g} &= \frac{R}{2 \pi L} \\
+    \Rightarrow L &= \frac{R}{2 \pi f_{g}} \\
+    L &= \frac{\var{R}}{2 \pi \var{f_g}} \\
+    L &= \SIvar{L, 3}{\henry}
+\end{align*}
+
+\subsection{Simulation}
+
+\begin{sagesilent}
+    simulation_data = LTSpice.plot_data_polar("tests/simulations/export/test_bode.txt")
+    simulation_data_mag, simulation_data_pha = simulation_data["V(out)"]
+
+    simulation_plot_mag = list_plot(
+        simulation_data_mag,
+        color='#148873',
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=["Frequency in $\\unit{\\hertz}$", "Magnitude in $\\unit{\\decibel}$"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+
+    simulation_plot_pha = list_plot(
+        simulation_data_pha,
+        color='#148873',
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=["Frequency in $\\unit{\\hertz}$", "Phase in $\\unit{\\degree}$"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{simulation_plot_mag}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{simulation_plot_pha}
+    \end{subfigure}
+    \caption{Magnitude and phase response of the ltspice RL high-pass filter simulation}
+\end{figure}
+
+\subsection{Analysis}
+
+\begin{sagesilent}
+    s = var('s')
+    highpass_filter = TransferFunction((s*L)/(R+s*L), 1, 10000, 1)
+
+    bode_plot_mag = list_plot(
+        highpass_filter.plot_data_freq_mag_bode(),
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=["Frequency in $\\unit{\\hertz}$", "Magnitude in $\\unit{\\decibel}$"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+
+    bode_plot_pha = list_plot(
+        highpass_filter.plot_data_freq_pha_bode(),
+        scale='semilogx',
+        figsize=[5.5,2],
+        axes_labels=["Frequency in $\\unit{\\hertz}$", "Phase in $\\unit{\\degree}$"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{bode_plot_mag}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}{\textwidth}
+        \centering
+        \sageplot{bode_plot_pha}
+    \end{subfigure}
+    \caption{Magnitude and phase response of the RL high-pass filter}
+\end{figure}
+
+\begin{sagesilent}
+    step_response_plot = list_plot(
+        highpass_filter.plot_data_step(),
+        figsize=[5.5,2],
+        axes_labels=["Time in $\\unit{\\second}$", "Amplitude"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{step_response_plot}
+    \caption{Step response of the RL high-pass}
+\end{figure}
+
+\begin{sagesilent}
+    group_delay_plot = list_plot(
+        highpass_filter.plot_data_freq_gd(f_stop=1500),
+        figsize=[5.5,2],
+        axes_labels=["Frequency in $\\unit{\\hertz}$", "Time in $\\unit{\\second}$"],
+        axes_labels_size=1,
+        gridlines=True,
+        plotjoined=True,
+        frame=True
+    )
+\end{sagesilent}
+
+\begin{figure}[H]
+    \centering
+    \sageplot{group_delay_plot}
+    \caption{Group delay of the RL high-pass}
+\end{figure}

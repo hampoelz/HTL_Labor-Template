@@ -1,0 +1,23 @@
+\begin{sagesilent}
+    from os import listdir
+    from matplotlib import rc
+
+    attach_path = "../helpers/"
+
+    # load helper programs
+    load_attach_path(attach_path)
+    for f in listdir(attach_path):
+        if f.endswith('.sage'): load(f)
+
+    # allow latex siunitx macros in plots
+    rc('text', usetex=True)
+    rc('text.latex', preamble='\\usepackage{siunitx}')
+
+    # set helper program config variables
+    def set_helper_config(key, value):
+        globals()["config_" + key] = value
+        return ""
+\end{sagesilent}
+
+% load the (scientific/technical) configurations made in the file main.sty
+\loadsciconfig

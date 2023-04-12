@@ -1,0 +1,71 @@
+%
+% Copyright (c) 2023 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+\typeout{Rene Hampölz, 2023}
+
+% ========================================
+%              Do not change!             
+% ========================================
+% Make configurations in the main.sty file
+
+\usepackage{sagetex}
+\usepackage{siunitx}
+\usepackage{pdftexcmds}
+\usepackage{geometry}
+
+\geometry{top=20mm,bottom=20mm}
+
+% load helper programs and configurations
+\AtBeginDocument{\input{helpers/__init__.tex}}
+
+% usage: \executeiffilenewer{<File1>}{<File2>}{<Shell Command>}
+%
+\newcommand{\executeiffilenewer}[3]{%
+    \ifnum\pdf@strcmp{\pdf@filemoddate{#1}}%
+    {\pdf@filemoddate{#2}}>0%
+    {\immediate\write18{#3}}\fi%
+}
+
+% usage: \includesvg
+%
+\newcommand{\includesvg}[2][]{
+    \executeiffilenewer{#2}{out/#2.pdf}{inkscape "#2" --export-area-drawing --batch-process --export-type=pdf --export-filename="out/#2.pdf"}
+    \IfFileExists{out/#2.pdf}{\includegraphics[#1]{out/#2.pdf}}{\fbox{The SVG cannot be included since Inkscape was not found.}}
+}
+
+% usage: \var{<SageMath Variable>}
+%        \SIvar{<SageMath Variable>}{<Unit>}
+%
+\newcommand{\var}[1]{\sagestr{format_object(#1)}}
+\newcommand{\SIvar}[2]{\var{#1}\,\unit{#2}}
+
+% usage: \SetHelperConfig{<key>}{<value>}
+%
+\newcommand{\SetHelperConfig}[2]{\sagestr{set_helper_config("#1", #2)}}
+
+% usage:
+%   \begin{circuitikz}
+%     ...
+%     \current{<node>}{<label>}
+%   \end{circuitikz}
+%
+\newcommand{\current}[2]{
+    \node[currarrow, color=red, rotate=\ctikzgetdirection{#1}] at (#1-Ipos){};
+    \node[red,anchor=\ctikzgetanchor{#1}{Ilab}] at (#1-Ipos) {#2};
+}
+
+% usage:
+%   \begin{circuitikz}
+%     ...
+%     \voltage{<node>}{<label>}
+%   \end{circuitikz}
+%
+\newcommand{\voltage}[2]{
+    \draw[-Triangle, blue] (#1-Vfrom) -- (#1-Vto);
+    \node[anchor=\ctikzgetanchor{#1}{Vlab}, blue] at (#1-Vlab) {#2};
+}

@@ -1,0 +1,116 @@
+%
+% Copyright (c) 2023 Rene Hampölz
+%
+% Use of this source code is governed by an MIT-style
+% license that can be found in the LICENSE file under
+% https://github.com/hampoelz/LaTeX-Template.
+%
+
+% ============================================
+%  Enable or disable commands and environments
+% ============================================
+
+% usage: https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#preconfigured-commands-and-environments
+
+% ----------- custom text size -----------
+\newcommand{\tsizetiny}[1]{{\tiny #1}}
+\newcommand{\tsizescript}[1]{{\scriptsize #1}}
+\newcommand{\tsizefootnote}[1]{{\footnotesize #1}}
+\newcommand{\tsizesmall}[1]{{\small #1}}
+\newcommand{\tsizenormal}[1]{{\normalsize #1}}
+\newcommand{\tsizelarge}[1]{{\large #1}}
+\newcommand{\tsizeLarge}[1]{{\Large #1}}
+\newcommand{\tsizeLARGE}[1]{{\LARGE #1}}
+\newcommand{\tsizehuge}[1]{{\huge #1}}
+\newcommand{\tsizeHuge}[1]{{\Huge #1}}
+
+% --------- unnumbered sections ----------
+\newcommand{\unnumberedPart}[1]{\part*{#1}\addcontentsline{toc}{part}{#1}}
+\newcommand{\unnumberedSection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\unnumberedSubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+\newcommand{\unnumberedSubsubsection}[1]{\subsubsection*{#1}\addcontentsline{toc}{subsubsection}{#1}}
+\newcommand{\unnumberedParagraph}[1]{\paragraph*{#1}\addcontentsline{toc}{paragraph}{#1}}
+\newcommand{\unnumberedSubparagraph}[1]{\subparagraph*{#1}\addcontentsline{toc}{subparagraph}{#1}}
+
+% ---------- section title page ----------
+\newcommand{\bigsection}[2][]{
+    \def\hrulefill{\leavevmode\leaders\hrule height 0.5ex depth \dimexpr -0.5ex+0.4pt \hfill\kern 0pt}
+    \clearpage\null
+    \par\refstepcounter{section}
+    \addcontentsline{toc}{section}{\protect\numberline{\thesection}#2}
+    \if\relax\detokenize{#1}\relax\else\label{#1}\fi
+    \null\vfill\vspace{-2em}
+    \begin{center}%
+        \Huge%
+        \textbf{\thesection}%
+        \\\vspace{0.5ex}%
+        \hrulefill\\%
+        \textbf{#2}%
+        \\\hrulefill%
+    \end{center}
+    \vfill\break
+    \clearpage
+}
+
+% --------- center title and toc ---------
+\newcommand{\maketitletoc}{
+    \null\nointerlineskip\vfill
+    \let\snewpage\newpage
+    \let\newpage\relax
+    \maketitle
+    \vspace{2em}
+    \tableofcontents
+    \vspace{0.1\textheight}
+    \let\newpage\snewpage
+    \vfill\break
+}
+
+% ------------ highlight text ------------
+\usepackage{xcolor}
+\newcommand{\hl}[1]{\colorbox[HTML]{FBF719}{#1}}
+
+% --- align columns with custom width ----
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ---------- titled-environment ----------
+% \usepackage{enumitem}
+% \usepackage{calc}
+% \newenvironment{titled}[1]{
+%     \begin{description}[% 
+%             leftmargin=%
+%                 \widthof{\textnormal{#1}},%
+%             labelwidth=0pt,%
+%             labelsep=0pt%
+%         ]
+%         \item[\textnormal{#1}]
+%         \begin{sloppypar}
+% }{
+%         \end{sloppypar}
+%     \end{description}
+% }
+
+% ----- box with remaining page size -----
+% \usepackage[most]{tcolorbox}
+% \newtcolorbox{restofpage}[1][]{
+%  enhanced,
+%  frame hidden,
+%  colback=white,
+%  height fill,
+%  space to=\restspace,
+%  #1
+% }
+
+% --------------- gray box ---------------
+% \usepackage[most]{tcolorbox}
+% \newcommand{\graybox}[1]{%
+%     \begin{tcolorbox}[%
+%         enhanced,%
+%         frame hidden,%
+%         width=\linewidth%
+%     ]
+%     #1
+%     \end{tcolorbox}%
+% }
