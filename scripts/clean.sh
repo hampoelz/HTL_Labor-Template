@@ -6,6 +6,8 @@
 # https://github.com/hampoelz/LaTeX-Template.
 #
 
+# Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-skriptetasks
+
 #!/bin/bash
 
 git clean -Xdf

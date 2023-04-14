@@ -2,11 +2,18 @@
 
 setlocal enabledelayedexpansion
 
+set "args=%*"
+
+call wsl --list >nul 2>&1 && call wsl sage --version >nul 2>&1 && (
+    echo call wsl --cd "%cd%" /bin/bash --login -c 'sage !args!'
+    exit /b
+)
+
 for %%a in ("%LocalAppData%" "%ProgramFiles%") do (
     call:find_sage "%%~a"
     
     if defined sage_path (
-        start /wait /min "" "!sage_path!" -d --dir "%cd%" /bin/bash --login -c '/opt/sagemath-9.2/sage %*'
+        start /wait /min "" "!sage_path!" -d --dir "%cd%" /bin/bash --login -c '/opt/sagemath-*/sage !args!'
         exit /b
     )
 )

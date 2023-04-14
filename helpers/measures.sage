@@ -1,3 +1,13 @@
+#
+# Copyright (c) 2023 Rene Hampölz
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file under
+# https://github.com/hampoelz/LaTeX-Template.
+#
+
+# usage: https://github.com/hampoelz/LaTeX-Science-Template/wiki/02-Usage#measurement-data-analysis
+
 if not 'sage' in globals():
     from sage.all import *
 
@@ -5,13 +15,18 @@ import numpy as np
 from scipy import interpolate
 from scipy import ndimage
 
-
 class Measures:
-    def __init__(self, titles, values):
+    def __init__(self, titles, values, ndigits=None):
         self.titles = titles
         self.rows = values
         self.columns = list(zip(*values))
-        self.table = table(values, header_row=titles,
+        n = ndigits
+        if ndigits is None:
+            n = [None for _ in range(0, len(values[0]))]
+        elif ndigits in ZZ:
+            n = [ndigits for _ in range(0, len(values[0]))]
+        formatted_values = [[format_object(row[value], ndigits=n[value]) for value in range(0, len(row))] for row in values]
+        self.table = table(formatted_values, header_row=titles,
                            frame=True, align='center')
 
     def plot_data(self, x_index, y_index):

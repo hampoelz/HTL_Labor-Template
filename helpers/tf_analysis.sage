@@ -1,11 +1,20 @@
+#
+# Copyright (c) 2023 Rene Hampölz
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file under
+# https://github.com/hampoelz/LaTeX-Template.
+#
+
+# usage: https://github.com/hampoelz/LaTeX-Science-Template/wiki/02-Usage#transfer-function-analysis
+
 if not 'sage' in globals():
     from sage.all import *
 
 import numpy as np
 from scipy import signal
 
-
-class Bode:
+class TransferFunction:
     def __init__(self, expr, freq_start, freq_stop, freq_steps):
         self.expr = expr
         self.freq = np.linspace(freq_start, freq_stop,
@@ -52,11 +61,11 @@ class Bode:
         phi_dw = derivative(phi, w).full_simplify()
         return fast_callable(phi_dw, vars=[w])
 
-    def plot_data_omeg_mag(self):
+    def plot_data_omeg_mag_bode(self):
         w, mag_dB, pha = self.data
         return list(zip(w, mag_dB))
 
-    def plot_data_omeg_pha(self):
+    def plot_data_omeg_pha_bode(self):
         w, mag_dB, pha = self.data
         return list(zip(w, pha))
 
@@ -74,12 +83,12 @@ class Bode:
         t = get_gd(w)
         return list(zip(w, t))
 
-    def plot_data_freq_mag(self):
+    def plot_data_freq_mag_bode(self):
         f = self.freq
         w, mag_dB, pha = self.data
         return list(zip(f, mag_dB))
 
-    def plot_data_freq_pha(self):
+    def plot_data_freq_pha_bode(self):
         f = self.freq
         w, mag_dB, pha = self.data
         return list(zip(f, pha))

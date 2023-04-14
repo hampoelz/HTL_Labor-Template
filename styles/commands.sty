@@ -7,8 +7,10 @@
 %
 
 % ============================================
-%  Enable or disable packages and/or commands 
+%  Enable or disable commands and environments
 % ============================================
+
+% Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-befehle-und-umgebungen
 
 % ----------- custom text size -----------
 \newcommand{\tsizetiny}[1]{{\tiny #1}}
@@ -51,17 +53,17 @@
 }
 
 % --------- center title and toc ---------
-\newcommand{\maketitletoc}{               % ┝ make title, include toc and center vertically with a slight offset
-    \null\nointerlineskip\vfill           % |
-    \let\snewpage\newpage                 % |
-    \let\newpage\relax                    % |
-    \maketitle                            % |
-    \vspace{2em}                          % | add some space between title and toc
-    \tableofcontents                      % |
-    \vspace{0.1\textheight}               % | add offset
-    \let\newpage\snewpage                 % |
-    \vfill\break                          % |
-}                                         % |
+\newcommand{\maketitletoc}{
+    \null\nointerlineskip\vfill
+    \let\snewpage\newpage
+    \let\newpage\relax
+    \maketitle
+    \vspace{2em}
+    \tableofcontents
+    \vspace{0.1\textheight}
+    \let\newpage\snewpage
+    \vfill\break
+}
 
 % ------------ highlight text ------------
 \usepackage{xcolor}
@@ -69,46 +71,46 @@
 
 % --- align columns with custom width ----
 \usepackage{array}
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}   % left aligned column with custom width
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}     % center aligned column with custom width
-\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}    % right aligned column with custom width
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 
 % ---------- titled-environment ----------
 % \usepackage{enumitem}
 % \usepackage{calc}
-% \newenvironment{titled}[1]{                 % ┝ indent the content by the length of the title
-%     \begin{description}[%                   % |
-%             leftmargin=%                    % | example:
-%                 \widthof{\textnormal{#1}},% % |   \begin{titled}{lorem ipsum: }
-%             labelwidth=0pt,%                % |     Lorem ipsum\\
-%             labelsep=0pt%                   % |     Lorem ipsum\\
-%         ]                                   % |     ...
-%         \item[\textnormal{#1}]              % |   \end{titled}
-%         \begin{sloppypar}                   % |
-% }{                                          % | output of example:
-%         \end{sloppypar}                     % |   lorem ipsum: Lorem ipsum
-%     \end{description}                       % |                Lorem ipsum
-% }                                           % |                ...
+% \newenvironment{titled}[1]{
+%     \begin{description}[% 
+%             leftmargin=%
+%                 \widthof{\textnormal{#1}},%
+%             labelwidth=0pt,%
+%             labelsep=0pt%
+%         ]
+%         \item[\textnormal{#1}]
+%         \begin{sloppypar}
+% }{
+%         \end{sloppypar}
+%     \end{description}
+% }
 
 % ----- box with remaining page size -----
 % \usepackage[most]{tcolorbox}
-% \newtcolorbox{restofpage}[1][]{           % ┝ create a new box environment with the '\restspace' command in it with the
-%  enhanced,                                % |  height set to the rest of the current page's available vertical space
-%  frame hidden,                            % |
-%  colback=white,                           % | example:
-%  height fill,                             % |   \begin{restofpage}[frame style, boxrule=0.5pt]
-%  space to=\restspace,                     % |     \includegraphics[height=\restspace]{images/lorem_picsum.jpg}
-%  #1                                       % |   \end{restofpage}
-% }                                         % |
+% \newtcolorbox{restofpage}[1][]{
+%  enhanced,
+%  frame hidden,
+%  colback=white,
+%  height fill,
+%  space to=\restspace,
+%  #1
+% }
 
 % --------------- gray box ---------------
 % \usepackage[most]{tcolorbox}
-% \newcommand{\graybox}[1]{%                % ┝ create a simple gray box with text for a few notes
-%     \begin{tcolorbox}[%                   % |
-%         enhanced,%                        % |
-%         frame hidden,%                    % |
-%         width=\linewidth%                 % |
-%     ]                                     % |
-%     #1                                    % |
-%     \end{tcolorbox}%                      % |
-% }                                         % |
+% \newcommand{\graybox}[1]{%
+%     \begin{tcolorbox}[%
+%         enhanced,%
+%         frame hidden,%
+%         width=\linewidth%
+%     ]
+%     #1
+%     \end{tcolorbox}%
+% }

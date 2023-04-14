@@ -12,24 +12,19 @@
 %              Do not change!             
 % ========================================
 
-\usepackage{sagetex}
-\usepackage{circuitikz}
-\usetikzlibrary{arrows}
-
-\usepackage{pdftexcmds}
-
 \confidential{\textbf{Elektrotechnisches Labor}}
-\ctikzset{european}
+
+\AtBeginDocument{\@ifpackageloaded{circuitikz}{\ctikzset{european}}{}}
 
 % usage: \labtitle{<Title>}
 %
-\newcommand{\labtitle}[1]{                                      % ┝ include HTL-Weiz logo in title
+\newcommand{\labtitle}[1]{
     \htltitle{
         \textbf{\underline{Laborübung}}
         \smallbreak
         #1
     }
-}                                                               % |
+}
 
 % usage
 %   \begin{devicelist}
@@ -42,7 +37,7 @@
         \renewcommand{\arraystretch}{1.5}
         \begin{tabular}{|l|c|r|}
             \hline
-            \multicolumn{1}{|c|}{\textbf{Geräteart}} & \textbf{Inventar Nummer} & \multicolumn{1}{|c|}{\textbf{Bezeichnung}} \\[1ex]
+            \multicolumn{1}{|c|}{\textbf{Geräteart}} & \textbf{Inventar-Nummer} & \multicolumn{1}{|c|}{\textbf{Bezeichnung}} \\[1ex]
             \hline \hline
 }{    
         \end{tabular}
@@ -60,44 +55,3 @@
 % usage: \device{<Inventory ID>}{<Designation>}
 %
 \newcommand{\device}[2]{& \texttt{#1} & $#2$ \\}
-
-% usage: \executeiffilenewer{<File1>}{<File2>}{<Shell Command>}
-%
-\newcommand{\executeiffilenewer}[3]{%
-    \ifnum\pdf@strcmp{\pdf@filemoddate{#1}}%
-    {\pdf@filemoddate{#2}}>0%
-    {\immediate\write18{#3}}\fi%
-}
-
-% usage: \includesvg
-%
-\newcommand{\includesvg}[2][]{
-    \executeiffilenewer{#2}{out/#2.pdf}{inkscape "#2" --export-area-drawing --batch-process --export-type=pdf --export-filename="out/#2.pdf"}
-    \IfFileExists{out/#2.pdf}{\includegraphics[#1]{out/#2.pdf}}{\fbox{The SVG cannot be included since Inkscape was not found.}}
-}
-
-% usage: \var{<SageMath Variable>}
-%
-\newcommand{\var}[1]{\sage{norm(#1)}}
-
-% usage:
-%   \begin{circuitikz}
-%     ...
-%     \current{<node>}{<label>}
-%   \end{circuitikz}
-%
-\newcommand{\current}[2]{
-    \node[currarrow, color=red, rotate=\ctikzgetdirection{#1}] at (#1-Ipos){};
-    \node[red,anchor=\ctikzgetanchor{#1}{Ilab}] at (#1-Ipos) {#2};
-}
-
-% usage:
-%   \begin{circuitikz}
-%     ...
-%     \voltage{<node>}{<label>}
-%   \end{circuitikz}
-%
-\newcommand{\voltage}[2]{
-    \draw[-Triangle, blue] (#1-Vfrom) -- (#1-Vto);
-    \node[anchor=\ctikzgetanchor{#1}{Vlab}, blue] at (#1-Vlab) {#2};
-}

@@ -11,9 +11,6 @@ on:
 permissions:
   contents: write
 
-env:
-  TEXMFDIR: /usr/local/texlive
-
 jobs:
   build:
     name: Build
@@ -21,22 +18,53 @@ jobs:
     container:
       image: sagemath/sagemath:latest
       options: --user root
+    env:
+      TEXMFDIR: /usr/local/texlive
     steps:
     - name: Install tools and dependencies
       run: |
         apt-get update -y
-        apt-get install -y wget git jq inkscape ghostscript imagemagick perl ruby pandoc ffmpeg
-    - name: Install full TeXLive scheme
+        apt-get install -y wget curl git jq inkscape ghostscript imagemagick perl ruby pandoc ffmpeg
+    - name: Install basic TeXLive scheme
       run: |
         mkdir install-tl && cd install-tl
         wget -O - -- http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar xzf - --strip-components=1
-        ./install-tl --texdir "$TEXMFDIR" --no-doc-install --no-src-install --no-interaction
+        ./install-tl --texdir "$TEXMFDIR" --no-doc-install --no-src-install --no-interaction --scheme scheme-basic
         echo "$TEXMFDIR/bin/x86_64-linux/" >> $GITHUB_PATH
-    - name: Install supplementary TeXLive packages
+    - name: Add supplementary TeXLive repository
       run: |
         tlmgr repository add https://mirror.ctan.org/systems/texlive/tlcontrib tlcontrib
         tlmgr pinning add tlcontrib "*"
-        tlmgr install collection-contrib
+    - name: Generate TeXLive cache key
+      run: |
+        echo "TEXCACHEKEY=texlive$(tlmgr --version | sed -n -e 's/^.* version //p')-cache" >> $GITHUB_ENV
+    - name: Restore TeXLive packages from cache
+      id: cache-tl-restore
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ env.TEXMFDIR }}
+        key: ${{ env.TEXCACHEKEY }}
+    - name: Import restored TeXLive packages
+      if: ${{ steps.cache-tl-restore.outputs.cache-hit == 'true' }}
+      run: |
+        mktexlsr
+        texhash
+        updmap-sys --force
+        fmtutil-sys --all
+        tlmgr recreate-tlpdb
+        tlmgr update --self --all
+    - name: Install full TeXLive scheme
+      if: ${{ steps.cache-tl-restore.outputs.cache-hit != 'true' }}
+      run: tlmgr install scheme-full
+    - name: Install supplementary TeXLive packages
+      if: ${{ steps.cache-tl-restore.outputs.cache-hit != 'true' }}
+      run: tlmgr install collection-contrib
+    - name: Save TeXLive packages to cache
+      if: ${{ steps.cache-tl-restore.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v3
+      with:
+        path: ${{ env.TEXMFDIR }}
+        key: ${{ env.TEXCACHEKEY }}
     - name: Checkout repository
       uses: actions/checkout@v3
       with:

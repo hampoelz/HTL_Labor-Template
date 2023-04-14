@@ -15,9 +15,9 @@
 
 \typeout{Rene Hampölz, 2023}
 
-\usepackage{luaotfload}                 % Font loader
-\usepackage{fontspec}                   % Font selection
-\usepackage[EU2]{fontenc}               % Font encoding
+\usepackage{luaotfload}                 % font loader
+\usepackage{fontspec}                   % font selection
+\usepackage[EU2]{fontenc}               % font encoding
 \usepackage[extendedchars]{grffile}     % non-ascii characters in paths
 \usepackage{lmodern}                    % text & mathematics fonts / additional characters
 
@@ -26,6 +26,13 @@
 % ========================================
 %              Configurations             
 % ========================================
+
+% Benutzung:
+%   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#change-document-language
+%   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#git-history
+%   https://github.com/hampoelz/LaTeX-Template/wiki/02-Usage#custom-document-font
+%   https://github.com/hampoelz/LaTeX-Science-Template/wiki/02-Usage#printformat-numbers-objects-and-variables
+%   https://github.com/hampoelz/LaTeX-Science-Template/wiki/02-Usage#print-numbers
 
 % --------------- language ---------------
 % \usepackage[english]{babel}             % english language
@@ -70,13 +77,58 @@
     BoldFont = *-Bold,              % |
 ]                                   % |
 
+% -------- technical / scientific --------
+\protected\def\loadsciconfig{
+
+    % numbers outside of the threshold range for the exponent are
+    % printed in scientific form when using the \var{} command
+    \SetHelperConfig{exponent_thresholds_min}{-3}
+    \SetHelperConfig{exponent_thresholds_max}{3}
+
+    % options for formatting numbers when using the \var{} command
+    \sisetup{
+        % force the format in which complex numbers are printed (by default, the complex numbers is printed as-given)
+        %complex-mode=cartesian,             % cartesian form
+        %complex-mode=polar,                 % polar form
+        %
+        % set the symbol used for the complex root
+        output-complex-root=\mathrm{j},     % 'j' symbol
+        %output-complex-root=\mathrm{i},     % 'i' symbol
+        %
+        % force the format in which angles are printed (by default, the angle is printed as-given)
+        %angle-mode=arc,                     % arc form cartesian form (degrees/minutes/seconds)
+        %angle-mode=decimal,                 % decimal form
+        %
+        % set the decimal marker
+        %output-decimal-marker={.},          % point marker
+        output-decimal-marker={,},          % comma marker
+        %
+        % the number of digits in each group
+        %digit-group-size=3,
+        %
+        % set the separator used between groups of digits
+        %group-separator={\,},               % kern seperator (small space)
+        %group-separator={,},                % comma separator
+        %
+        % set the symbol used for exponent products 
+        %exponent-product=\times,            % '×' symbol (cross)
+        exponent-product=\cdot,             % '·' symbol (dot)
+        %
+        % "squeeze" the output spacing (prints "2×10^-3" instead of "2 × 10^-3")
+        %tight-spacing=true,
+    }
+}
+
 % ========================================
 %        Enable or disable packages       
 % ========================================
 
+% Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#empfohlene-und-vorkonfigurierte-pakete
+
 % ------------ preconfigured -------------
 \usepackage{styles/history}             % auto-generate commit history - included packages: xparse, graphicx, calc, booktabs, ltablex, environ, ifplatform
 \usepackage{styles/commands}            % enable or disable predefined commands
+\usepackage{styles/science}             % technical and scientific styles - included packages: sagetex, siunitx, pdftexcmds, geometry
 \usepackage{styles/htbla}               % htbla weiz styles - included packages: xcolor, hyperref, geometry, fancyhdr, calc
 
 % --------- mathematical packages --------
@@ -138,3 +190,9 @@
     %::::::::::::::::::::::::::::::
 
 % \usepackage{markdown}\def\markdownOptionOutputDir{\auxDir}          % markdown support
+
+% --- technical / scientific packages ----
+\usepackage{tikz}                       % create graphics
+\usepackage[siunitx]{circuitikz}        % draw electrical networks using tikz
+%\usepackage{chemfig}                    % draw molecules using tikz
+%\usepackage{chemmacros}                 % macros for chemistry documents

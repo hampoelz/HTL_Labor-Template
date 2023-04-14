@@ -6,6 +6,10 @@
 :: https://github.com/hampoelz/LaTeX-Template.
 ::
 
+:: Benutzung:
+::   https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#vorkonfigurierte-skriptetasks
+::   https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#aktualisieren
+
 @echo off
 
 :: minimum required git version: v2.22.0
@@ -27,7 +31,7 @@ set "tplver_file=.git\tplver"
 set "currbr_file=.git\currbr"
 
 :: commits ignored by cherry-pick (seperate with space)
-set "ignore_SHAs=ecb34d6 ec879ac 54ff7ab"
+set "ignore_SHAs=ecb34d6 ec879ac 54ff7ab ec75cc7"
 
 
 set "hookmgr_path=scripts\hookmgr.bat"

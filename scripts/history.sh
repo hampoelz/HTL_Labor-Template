@@ -6,6 +6,8 @@
 # https://github.com/hampoelz/LaTeX-Template.
 #
 
+# Benutzung: https://github.com/hampoelz/HTL_LaTeX-Template/wiki/02-Benutzung#git-versionsverlauf
+
 #!/bin/bash
 
 author_avatar_dir="./out/images/"
@@ -21,8 +23,8 @@ jq_bin_download="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linu
 jq_bin_path="./out/bin/jq-linux32"
 
 # List of Gitmojis that will be removed in the commit message (seperate with space)
-#   curl -s https://raw.githubusercontent.com/carloscuesta/gitmoji/master/src/data/gitmojis.json | jq -r .gitmojis[].code
-gitmojis=":art: :zap: :fire: :bug: :ambulance: :sparkles: :memo: :rocket: :lipstick: :tada: :white_check_mark: :lock: :closed_lock_with_key: :bookmark: :rotating_light: :construction: :green_heart: :arrow_down: :arrow_up: :pushpin: :construction_worker: :chart_with_upwards_trend: :recycle: :heavy_plus_sign: :heavy_minus_sign: :wrench: :hammer: :globe_with_meridians: :pencil2: :poop: :rewind: :twisted_rightwards_arrows: :package: :alien: :truck: :page_facing_up: :boom: :bento: :wheelchair: :bulb: :beers: :speech_balloon: :card_file_box: :loud_sound: :mute: :busts_in_silhouette: :children_crossing: :building_construction: :iphone: :clown_face: :egg: :see_no_evil: :camera_flash: :alembic: :mag: :label: :seedling: :triangular_flag_on_post: :goal_net: :dizzy: :wastebasket: :passport_control: :adhesive_bandage: :monocle_face: :coffin: :test_tube: :necktie: :stethoscope: :bricks: :technologist:"
+#   curl -s https://raw.githubusercontent.com/carloscuesta/gitmoji/master/packages/gitmojis/src/gitmojis.json | jq -r '.gitmojis[].code' | tr '\n' ' '
+gitmojis=":art: :zap: :fire: :bug: :ambulance: :sparkles: :memo: :rocket: :lipstick: :tada: :white_check_mark: :lock: :closed_lock_with_key: :bookmark: :rotating_light: :construction: :green_heart: :arrow_down: :arrow_up: :pushpin: :construction_worker: :chart_with_upwards_trend: :recycle: :heavy_plus_sign: :heavy_minus_sign: :wrench: :hammer: :globe_with_meridians: :pencil2: :poop: :rewind: :twisted_rightwards_arrows: :package: :alien: :truck: :page_facing_up: :boom: :bento: :wheelchair: :bulb: :beers: :speech_balloon: :card_file_box: :loud_sound: :mute: :busts_in_silhouette: :children_crossing: :building_construction: :iphone: :clown_face: :egg: :see_no_evil: :camera_flash: :alembic: :mag: :label: :seedling: :triangular_flag_on_post: :goal_net: :dizzy: :wastebasket: :passport_control: :adhesive_bandage: :monocle_face: :coffin: :test_tube: :necktie: :stethoscope: :bricks: :technologist: :money_with_wings: :thread: :safety_vest:"
 
 title=""
 prefix=""
