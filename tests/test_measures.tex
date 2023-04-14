@@ -177,3 +177,24 @@ Datenblatt: $U_{ZD} = \SIvar{U_ZD}{\volt}$, $U_{ZD_{max}} = \SIvar{U_ZD_max}{\vo
     \sageplot{measured_data_plot}
     \caption{Ausgangskennlinie \textbf{$U_{out} = f(R_L)$} mit Messdaten}
 \end{figure}
+
+\subsection{Verwendete Komponenten}
+
+\medskip
+
+\begin{devicelist}
+    \devicecat{Widerstands-Dekade}{2}{%
+        \device{ET-LAB-RDXX}{R_{V}}
+        \device{ET-LAB-RDXX}{R_{L}}
+    }
+    \devicecat{Multimeter}{2}{%
+        \device{ET-LAB-DMXX}{I_{out}}
+        \device{ET-LAB-DMXX}{U_{out}}
+    }
+    \devicecat{Z-Diode}{1}{%
+        \device{BZD23-C5V1}{ZD}
+    }
+    \devicecat{Transistor}{1}{%
+        \device{BC546C}{T}
+    }
+\end{devicelist}
