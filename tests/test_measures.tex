@@ -88,11 +88,9 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 
     simulation_plot = list_plot(
         simulation_data_ohm_volt,
+        axes_labels=["$R_L$ in $\Omega$", "$V_{out}$ in V"],
         color='#148873',
         figsize=[5.5,2],
-        axes_labels=["$R_L$ in $\\unit{\\ohm}$", "$V_{out}$ in $\\unit{\\volt}$"],
-        axes_labels_size=1,
-        gridlines=True,
         plotjoined=True,
         frame=True
     )
@@ -109,9 +107,9 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 \begin{sagesilent}
     measured_data = Measures(
         [
-            "$R_L$ in $\\unit{\\ohm}$",
-            "$V_{out}$ in $\\unit{\\volt}$", 
-            "$I_{out}$ in $\\unit{\\milli\\ampere}$"
+            "$R_L$ in $\Omega$",
+            "$V_{out}$ in V", 
+            "$I_{out}$ in A"
         ], [
             [100, 3.96, 38.2],
             [120, 3.96, 32.0],
@@ -150,10 +148,9 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 \begin{sagesilent}
     measured_data_plot = list_plot(
         measured_data.plot_data(index_RL, index_Ua),
+        axes_labels=["$R_L$ in $\Omega$", "$V_{out}$ in V"],
         color='purple',
-        figsize=[5.5,2],
-        axes_labels=["$R_L$ in $\\unit{\\ohm}$", "$V_{out}$ in $\\unit{\\volt}$"],
-        axes_labels_size=1
+        figsize=[5.5,2]
     )
 
     measured_data_plot += line(

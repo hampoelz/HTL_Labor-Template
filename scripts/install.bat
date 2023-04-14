@@ -502,10 +502,15 @@ exit
 
     set "texmflocal_path="
     for /f "usebackq delims=" %%a in (`"kpsewhich -var-value=TEXMFLOCAL"`) do set "texmflocal_path=%%a"
+    for %%a in ("%texmflocal_path%") do set "texmflocal_path=%%~fa"
+    if "%texmflocal_path:~-1%" == "\" set texmflocal_path=%texmflocal_path:~0,-1%
 
     set "sagetex_path="
     cd "%SystemDrive%\"
     for /f "usebackq delims=" %%a in (`dir /b /s /a:-d "sagetex.sty"`) do set "sagetex_path=%%~fa\..\..\..\..\"
+    for %%a in ("%sagetex_path%") do set "sagetex_path=%%~fa"
+    if "%sagetex_path:~-1%" == "\" set sagetex_path=%sagetex_path:~0,-1%
+
     cd "%cwd_setup%"
 
     if not exist "%sagetex_path%\" (
@@ -536,7 +541,7 @@ exit
         exit
     )
 
-    xcopy "%sagetex_path%\" "%texmflocal_path%\" /s /e /y
+    xcopy "%sagetex_path%" "%texmflocal_path%" /s /e /y
     texhash "%texmflocal_path%/"
     goto:EOF
 

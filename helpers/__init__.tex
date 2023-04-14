@@ -1,6 +1,5 @@
 \begin{sagesilent}
     from os import listdir
-    from matplotlib import rc
 
     attach_path = "../helpers/"
 
@@ -9,9 +8,16 @@
     for f in listdir(attach_path):
         if f.endswith('.sage'): load(f)
 
-    # allow latex siunitx macros in plots
-    rc('text', usetex=True)
-    rc('text.latex', preamble='\\usepackage{siunitx}')
+    # set default plot settings
+    sage.plot.graphics.Graphics.SHOW_OPTIONS.update({
+        "axes_labels_size": 1,
+        "figsize": (5.5, 4),
+        "gridlines": True
+    })
+
+    sage.plot.graphics.Graphics.LEGEND_OPTIONS.update({
+        "shadow": False
+    })
 
     # set helper program config variables
     def set_helper_config(key, value):
