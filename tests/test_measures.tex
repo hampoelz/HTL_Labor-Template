@@ -1,22 +1,22 @@
-\section{Voltage Stabilization}
+\section{Spannungsstabilisierung}
 
-\subsection{Introduction}
+\subsection{Einführung}
 
 \begin{sagesilent}
-    V_in0 = 10
+    U_in0 = 10
     I_out_max = 0.05
     I_ZD = 0.001
 
-    V_ZD = 5.1
-    V_ZD_max = 5.4
-    V_BE = 0.66
+    U_ZD = 5.1
+    U_ZD_max = 5.4
+    U_BE = 0.66
 \end{sagesilent}
 
-Informations: $V_{in0} = \SIvar{V_in0}{\volt}$, $I_{out_{max}} = \SIvar{I_out_max}{\ampere}$, $I_{ZD} = \SIvar{I_ZD}{\ampere}$
+Angabe: $U_{in0} = \SIvar{U_in0}{\volt}$, $I_{out_{max}} = \SIvar{I_out_max}{\ampere}$, $I_{ZD} = \SIvar{I_ZD}{\ampere}$
 
-Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\volt}$, $V_{BE} = \SIvar{V_BE}{\volt}$
+Datenblatt: $U_{ZD} = \SIvar{U_ZD}{\volt}$, $U_{ZD_{max}} = \SIvar{U_ZD_max}{\volt}$, $U_{BE} = \SIvar{U_BE}{\volt}$
 
-\subsection{Circuit}
+\subsection{Schaltung}
 
 \begin{figure}[H]
     \centering
@@ -43,34 +43,34 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
         ($(out+) + (1,0)$) to[open,name=outV,v^] ($(out-) + (1,0)$)
         ;
 
-        \voltage{inV}{$V_{in0}$}
+        \voltage{inV}{$U_{in0}$}
         \current{ZD}{$I_{ZD}$}
         \current{I_B}{$I_{B}$}
         \current{R_L}{$I_{out}$}
-        \voltage{outV}{$V_{out}$}
+        \voltage{outV}{$U_{out}$}
     \end{circuitikz}
 \end{figure}
 
-\subsection{Calculations}
+\subsection{Berechnungen}
 
 \begin{sagesilent}
-    R_V = (V_in0 - V_ZD) / I_ZD
-    R_L_min = (V_ZD_max - V_BE) / I_out_max
+    R_V = (U_in0 - U_ZD) / I_ZD
+    R_L_min = (U_ZD_max - U_BE) / I_out_max
 \end{sagesilent}
 
 \begin{equation*}
-    R_{V} = \frac{V_{in0} - V_{ZD}}{I_{ZD} + I_{B}} \tag*{$I_{B} = \quad \ll$ \quad \textit{(negligible)}}
+    R_{V} = \frac{U_{in0} - U_{ZD}}{I_{ZD} + I_{B}} \tag*{$I_{B} = \quad \ll$ \quad \textit{(vernachlässigbar)}}
 \end{equation*}
 
 \begin{align*}
-    R_{V} &= \frac{V_{in0} - V_{ZD}}{I_{ZD}} \\
-    R_{V} &= \frac{\var{V_in0} - \var{V_ZD}}{\var{I_ZD}} \\
+    R_{V} &= \frac{U_{in0} - U_{ZD}}{I_{ZD}} \\
+    R_{V} &= \frac{\var{U_in0} - \var{U_ZD}}{\var{I_ZD}} \\
     R_{V} &= \SIvar{R_V}{\ohm}
 \end{align*}
 
 \begin{align*}
-    R_{L_{min}} &= \frac{V_{ZD_{max}} - V_{BE}}{I_{out_{max}}} \\
-    R_{L_{min}} &= \frac{\var{V_ZD_max} - \var{V_BE}}{\var{I_out_max}} \\
+    R_{L_{min}} &= \frac{U_{ZD_{max}} - U_{BE}}{I_{out_{max}}} \\
+    R_{L_{min}} &= \frac{\var{U_ZD_max} - \var{U_BE}}{\var{I_out_max}} \\
     R_{L_{min}} &= \SIvar{R_L_min}{\ohm}
 \end{align*}
 
@@ -79,7 +79,7 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 \begin{figure}[H]
     \centering
     \includesvg[width=0.8\textwidth]{tests/simulations/export/test_measures.svg}
-    \caption{Output characteristic \textbf{$V_{out} = f(R_L)$} of the simulation. \textit{(embedded as svg)}}
+    \caption{Ausgangskennlinie \textbf{$U_{out} = f(R_L)$} der Simulation. \textit{(als SVG eingebettet)}}
 \end{figure}
 
 \begin{sagesilent}
@@ -88,7 +88,7 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 
     simulation_plot = list_plot(
         simulation_data_ohm_volt,
-        axes_labels=["$R_L$ in $\Omega$", "$V_{out}$ in V"],
+        axes_labels=["$R_L$ in $\Omega$", "$U_{out}$ in V"],
         color='#148873',
         figsize=[5.5,2],
         plotjoined=True,
@@ -99,16 +99,16 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 \begin{figure}[H]
     \centering
     \sageplot{simulation_plot}
-    \caption{Output characteristic \textbf{$V_{out} = f(R_L)$} of the simulation. \textit{(imported from ltspice)}}
+    \caption{Ausgangskennlinie \textbf{$U_{out} = f(R_L)$} der Simulation. \textit{(importiert aus ltspice)}}
 \end{figure}
 
-\subsection{Analysis}
+\subsection{Auswertung}
 
 \begin{sagesilent}
     measured_data = Measures(
         [
             "$R_L$ in $\Omega$",
-            "$V_{out}$ in V", 
+            "$U_{out}$ in V", 
             "$I_{out}$ in A"
         ], [
             [100, 3.96, 38.2],
@@ -135,7 +135,7 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
     index_Ia = 2
 \end{sagesilent}
 
-\subsubsection{Measured Data}
+\subsubsection{Messdaten}
 
 \begin{table}[H]
     \centering
@@ -143,12 +143,12 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
     \sage{measured_data.table}
 \end{table}
 
-\subsubsection{Plotting}
+\subsubsection{Grafische Darstellung}
 
 \begin{sagesilent}
     measured_data_plot = list_plot(
         measured_data.plot_data(index_RL, index_Ua),
-        axes_labels=["$R_L$ in $\Omega$", "$V_{out}$ in V"],
+        axes_labels=["$R_L$ in $\Omega$", "$U_{out}$ in V"],
         color='purple',
         figsize=[5.5,2]
     )
@@ -175,5 +175,5 @@ Datasheet: $V_{ZD} = \SIvar{V_ZD}{\volt}$, $V_{ZD_{max}} = \SIvar{V_ZD_max}{\vol
 \begin{figure}[H]
     \centering
     \sageplot{measured_data_plot}
-    \caption{Output characteristic \textbf{$V_{out} = f(R_L)$} with measured data}
+    \caption{Ausgangskennlinie \textbf{$U_{out} = f(R_L)$} mit Messdaten}
 \end{figure}

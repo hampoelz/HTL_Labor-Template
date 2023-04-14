@@ -1,15 +1,15 @@
-\section{High-Pass}
+\section{Hochpass}
 
-\subsection{Introduction}
+\subsection{Einführung}
 
 \begin{sagesilent}
     f_g = 100
     R = 195.5
 \end{sagesilent}
 
-Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
+Angabe: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 
-\subsection{Circuit}
+\subsection{Schaltung}
 
 \begin{figure}[H]
     \centering
@@ -29,12 +29,12 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
         (out+) to[open,name=outV,v^] (out-)
         ;
 
-        \voltage{inV}{$V_{in}$}
-        \voltage{outV}{$V_{out}$}
+        \voltage{inV}{$U_{in}$}
+        \voltage{outV}{$U_{out}$}
     \end{circuitikz}
 \end{figure}
 
-\subsection{Calculations}
+\subsection{Berechnungen}
 
 \begin{sagesilent}
     L = R/(2*pi*f_g)
@@ -55,7 +55,7 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 
     simulation_plot_mag = list_plot(
         simulation_data_mag,
-        axes_labels=["Frequency in Hz", "Magnitude in dB"],
+        axes_labels=["Frequenz in Hz", "Betrag in dB"],
         scale='semilogx',
         color='#148873',
         figsize=[5.5,2],
@@ -65,7 +65,7 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 
     simulation_plot_pha = list_plot(
         simulation_data_pha,
-        axes_labels=["Frequency in Hz", "Phase in $\degree$"],
+        axes_labels=["Frequenz in Hz", "Phase in $\degree$"],
         scale='semilogx',
         color='#148873',
         figsize=[5.5,2],
@@ -85,10 +85,10 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
         \centering
         \sageplot{simulation_plot_pha}
     \end{subfigure}
-    \caption{Magnitude and phase response of the ltspice RL high-pass filter simulation}
+    \caption{Betrag und Phasengang der ltspice RL-Hochpassfiltersimulation}
 \end{figure}
 
-\subsection{Analysis}
+\subsection{Auswertung}
 
 \begin{sagesilent}
     s = var('s')
@@ -96,7 +96,7 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 
     bode_plot_mag = list_plot(
         highpass_filter.plot_data_freq_mag_bode(),
-        axes_labels=["Frequency in Hz", "Magnitude in dB"],
+        axes_labels=["Frequenz in Hz", "Betrag in dB"],
         scale='semilogx',
         figsize=[5.5,2],
         plotjoined=True,
@@ -105,7 +105,7 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 
     bode_plot_pha = list_plot(
         highpass_filter.plot_data_freq_pha_bode(),
-        axes_labels=["Frequency in Hz", "Phase in $\degree$"],
+        axes_labels=["Frequenz in Hz", "Phase in $\degree$"],
         scale='semilogx',
         figsize=[5.5,2],
         plotjoined=True,
@@ -124,13 +124,13 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
         \centering
         \sageplot{bode_plot_pha}
     \end{subfigure}
-    \caption{Magnitude and phase response of the RL high-pass filter}
+    \caption{Betrags- und Phasengang des RL-Hochpassfilters}
 \end{figure}
 
 \begin{sagesilent}
     step_response_plot = list_plot(
         highpass_filter.plot_data_step(),
-        axes_labels=["Time in s", "Amplitude"],
+        axes_labels=["Zeit in s", "Amplitude"],
         figsize=[5.5,2],
         plotjoined=True,
         frame=True
@@ -140,13 +140,13 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 \begin{figure}[H]
     \centering
     \sageplot{step_response_plot}
-    \caption{Step response of the RL high-pass}
+    \caption{Sprungantwort des RL-Hochpasses}
 \end{figure}
 
 \begin{sagesilent}
     group_delay_plot = list_plot(
         highpass_filter.plot_data_freq_gd(f_stop=1500),
-        axes_labels=["Frequency in Hz", "Time in s"],
+        axes_labels=["Frequenz in Hz", "Zeit in s"],
         figsize=[5.5,2],
         plotjoined=True,
         frame=True
@@ -156,5 +156,5 @@ Informations: $R = \SIvar{R}{\ohm}$, $f_{g} = \SIvar{f_g}{\hertz}$
 \begin{figure}[H]
     \centering
     \sageplot{group_delay_plot}
-    \caption{Group delay of the RL high-pass}
+    \caption{Gruppenverzögerung des RL-Hochpasses}
 \end{figure}
