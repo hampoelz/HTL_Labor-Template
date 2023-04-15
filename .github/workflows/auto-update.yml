@@ -64,3 +64,87 @@ jobs:
         gh pr reopen auto-update || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Merge changes from template" --body "Merged from $TEMPLATE_URL"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  get_document_template:
+    name: Get Template Repository
+    runs-on: ubuntu-latest
+    outputs:
+      repo: ${{ steps.parse_details.outputs.repo }}
+      branch: ${{ steps.parse_details.outputs.branch }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Parse template details
+      id: parse_details
+      run: |
+        template_repo=$(cat scripts/update.sh | grep -o -P '(?<=gh_repo=").*(?=")')
+        template_branch=$(cat scripts/update.sh | grep -o -P '(?<=remote_branch=").*(?=")')
+        echo "repo=$template_repo" >> $GITHUB_OUTPUT
+        echo "branch=$template_branch" >> $GITHUB_OUTPUT
+  patch:
+    name: Apply patches
+    needs: [ get_document_template, update ]
+    runs-on: ubuntu-latest
+    if: |
+      needs.get_document_template.outputs.repo == github.repository &&
+      needs.get_document_template.outputs.branch != ''
+    env:
+      REPO_BASE: hampoelz/LaTeX-Template
+      REPO_PATCH: hampoelz/HTL_LaTeX-Template
+      BRANCH_BASE: main
+      BRANCH_PATCH: main
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Create update branch
+      run: git switch auto-update 2>/dev/null || git switch -c auto-update
+    - name: Setup git identity
+      run: |
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+    - name: Add template remotes
+      run: |
+        git ls-remote --exit-code template_base &> /dev/null || git remote add template_base https://github.com/$REPO_BASE
+        git ls-remote --exit-code template_patch &> /dev/null || git remote add template_patch https://github.com/$REPO_PATCH
+        git fetch --quiet template_base
+        git fetch --quiet template_patch
+    - name: Apply patches
+      continue-on-error: true
+      run: |
+        git diff --binary template_base/$BRANCH_BASE template_patch/$BRANCH_PATCH | git apply --3way --whitespace=fix --allow-empty --
+    - name: Resolve merge conflicts
+      run: |
+        for i in $(git diff --name-only --diff-filter=U --relative); do
+          git show :1:"$i" > ./tmp.common || true
+          git show :2:"$i" > ./tmp.ours
+          git show :3:"$i" > ./tmp.theirs
+          
+          git merge-file --ours -p ./tmp.ours ./tmp.common ./tmp.theirs > "$i"
+          git add "$i"
+          
+          rm ./tmp.{common,ours,theirs}
+        done
+    - name: Commit applied patches
+      run: git diff-index --quiet --cached HEAD || git commit -m "Apply patches from $REPO_PATCH" -m "Applied from https://github.com/$REPO_PATCH/tree/$BRANCH_PATCH"
+    - name: Remove template remotes
+      run: |
+        git remote remove template_base
+        git remote remove template_patch
+    - name: Check changes
+      id: check_changes
+      run: |
+        has_changes=$(git diff --exit-code --quiet HEAD origin/auto-update &> /dev/null && echo false || echo true)
+        echo "UPDATE_AVAILABLE=$has_changes" >> $GITHUB_OUTPUT
+    - name: Push changes
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      run: git push --set-upstream origin auto-update
+    - name: Create pull request
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      continue-on-error: true
+      run: |
+        gh pr reopen auto-update || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Apply patches from $REPO_PATCH" --body "Applied from https://github.com/$REPO_PATCH/tree/$BRANCH_PATCH"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
