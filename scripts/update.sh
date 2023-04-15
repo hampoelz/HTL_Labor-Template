@@ -34,9 +34,6 @@ currbr_file=".git/currbr"
 ignore_SHAs="ecb34d6 ec879ac 54ff7ab ec75cc7"
 
 
-hookmgr_path="scripts/hookmgr.sh"
-rebuild_script="scripts/hooks/rebuild.sh"
-
 script_path=".git/~update.sh"
 script_url="https://raw.githubusercontent.com/$gh_repo/$remote_branch/scripts/update.sh"
 
@@ -205,12 +202,6 @@ function start_merge()
     echo "             Update was successfully merged             "
     echo "========================================================"
     echo
-
-    # add rebuild hooks
-    if [ -e "$hookmgr_path" ] && [ -e "$rebuild_script" ]; then
-        /bin/bash "$hookmgr_path" add pre-push "bash $rebuild_script --post_push" > /dev/null
-        /bin/bash "$hookmgr_path" add post-commit "bash $rebuild_script --post_commit" > /dev/null
-    fi
 
     cleanup
 }

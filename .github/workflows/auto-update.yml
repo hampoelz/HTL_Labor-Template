@@ -9,42 +9,157 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  BRANCH_UPDATE: auto-update
+  IDENTITY_NAME: github-actions[bot]
+  IDENTITY_MAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
 jobs:
-  update:
-    name: Update
+  get_parent:
+    name: Get Parent Repository
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.parent_template.outputs.git_url }}
+      url: ${{ steps.parse_url.outputs.parent_url }}
+      repo: ${{ steps.parse_details.outputs.parent_repo }}
+      branch: ${{ steps.parse_details.outputs.parent_branch }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Parse template url
-      run: echo "TEMPLATE_URL=$(git log -1 --grep='Merged from https://github.com/' | sed -n -e 's/\s*Merged from //p' | head -1 | cut -d' ' -f1)" >> $GITHUB_ENV
-    - name: Parse template infos
-      if: ${{ env.TEMPLATE_URL != '' }}
+    - name: Parse parent url
+      id: parse_url
       run: |
-        echo "PARENT_REPO=$(echo $TEMPLATE_URL | grep -o -P '(?<=https:\/\/github\.com\/).*(?=\/tree\/)')" >> $GITHUB_ENV
-        echo "PARENT_BRANCH=$(echo $TEMPLATE_URL | grep -o -P '(?<=\/tree\/).*')" >> $GITHUB_ENV
+        parent_url=$(git log -1 --grep='Merged from https://github.com/' | sed -n -e 's/\s*Merged from //p' | head -1 | cut -d' ' -f1)
+        echo "parent_url=$parent_url" >> $GITHUB_OUTPUT
+    - name: Parse parent details
+      id: parse_details
+      if: steps.parse_url.outputs.parent_url != ''
+      run: |
+        parent_repo=$(echo ${{ steps.parse_url.outputs.parent_url }} | grep -o -P '(?<=https:\/\/github\.com\/).*(?=\/tree\/)')
+        parent_branch=$(echo ${{ steps.parse_url.outputs.parent_url }} | grep -o -P '(?<=\/tree\/).*')
+        echo "parent_repo=$parent_repo" >> $GITHUB_OUTPUT
+        echo "parent_branch=$parent_branch" >> $GITHUB_OUTPUT
+  update:
+    name: Update Document
+    needs: [ get_parent ]
+    runs-on: ubuntu-latest
+    if: |
+      needs.get_parent.outputs.repo != '' &&
+      needs.get_parent.outputs.branch != ''
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.UPDATE_TOKEN == '' && secrets.GITHUB_TOKEN || secrets.UPDATE_TOKEN }}
+        fetch-depth: 0
     - name: Create update branch
-      if: ${{ env.PARENT_REPO != '' && env.PARENT_BRANCH != '' }}
-      run: git switch auto-update 2>/dev/null || git switch -c auto-update
+      run: git switch $BRANCH_UPDATE 2>/dev/null || git switch -c $BRANCH_UPDATE
+    - name: Setup git identity
+      run: |
+        git config user.name $IDENTITY_NAME
+        git config user.email $IDENTITY_MAIL
     - name: Update document
-      if: ${{ env.PARENT_REPO != '' && env.PARENT_BRANCH != '' }}
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        curl -s https://raw.githubusercontent.com/$PARENT_REPO/$PARENT_BRANCH/scripts/update.sh -o ../update.sh && bash ../update.sh && rm ../update.sh
+        curl -s https://raw.githubusercontent.com/${{ needs.get_parent.outputs.repo }}/${{ needs.get_parent.outputs.branch }}/scripts/update.sh -o ../update.sh
+        bash ../update.sh
+        rm ../update.sh
     - name: Check changes
-      if: ${{ env.PARENT_REPO != '' && env.PARENT_BRANCH != '' }}
-      run: echo "UPDATE_AVAILABLE=$(git diff --exit-code --quiet HEAD origin/main && echo false || echo true)" >> $GITHUB_ENV
-    - name: Push changes
-      if: ${{ env.UPDATE_AVAILABLE == 'true' }}
-      run: git push --set-upstream origin auto-update
-    - name: Create pull request
-      if: ${{ env.UPDATE_AVAILABLE == 'true' }}
+      id: check_changes
       run: |
-        gh pr reopen auto-update || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Merge changes from template" --body "Merged from $TEMPLATE_URL"
+        has_changes=$(git diff --exit-code --quiet HEAD origin/$BRANCH_UPDATE &> /dev/null && echo false || echo true)
+        echo "UPDATE_AVAILABLE=$has_changes" >> $GITHUB_OUTPUT
+    - name: Push changes
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      run: git push --set-upstream origin $BRANCH_UPDATE
+    - name: Create pull request
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      continue-on-error: true
+      run: |
+        gh pr reopen $BRANCH_UPDATE || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Merge changes from template" --body "Merged from https://github.com/${{ needs.get_parent.outputs.repo }}/tree/${{ needs.get_parent.outputs.branch }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  get_template:
+    name: Get Template Repository
+    runs-on: ubuntu-latest
+    outputs:
+      repo: ${{ steps.parse_details.outputs.template_repo }}
+      branch: ${{ steps.parse_details.outputs.template_branch }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Parse template details
+      id: parse_details
+      run: |
+        template_repo=$(cat scripts/update.sh | grep -o -P '(?<=gh_repo=").*(?=")')
+        template_branch=$(cat scripts/update.sh | grep -o -P '(?<=remote_branch=").*(?=")')
+        echo "template_repo=$template_repo" >> $GITHUB_OUTPUT
+        echo "template_branch=$template_branch" >> $GITHUB_OUTPUT
+  patch:
+    name: Apply Patches
+    needs: [ get_template, update ]
+    runs-on: ubuntu-latest
+    if: |
+      needs.get_template.outputs.repo == github.repository &&
+      needs.get_template.outputs.branch != ''
+    env:
+      REPO_BASE: hampoelz/LaTeX-Template
+      REPO_PATCH: hampoelz/HTL_LaTeX-Template
+      BRANCH_BASE: main
+      BRANCH_PATCH: main
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.UPDATE_TOKEN == '' && secrets.GITHUB_TOKEN || secrets.UPDATE_TOKEN }}
+        fetch-depth: 0
+    - name: Create update branch
+      run: git switch $BRANCH_UPDATE 2>/dev/null || git switch -c $BRANCH_UPDATE
+    - name: Setup git identity
+      run: |
+        git config user.name $IDENTITY_NAME
+        git config user.email $IDENTITY_MAIL
+    - name: Add template remotes
+      run: |
+        git ls-remote --exit-code template_base &> /dev/null || git remote add template_base https://github.com/$REPO_BASE
+        git ls-remote --exit-code template_patch &> /dev/null || git remote add template_patch https://github.com/$REPO_PATCH
+        git fetch --quiet template_base
+        git fetch --quiet template_patch
+    - name: Apply patches
+      run: |
+        git diff --binary template_base/$BRANCH_BASE template_patch/$BRANCH_PATCH | git apply --3way --whitespace=fix --allow-empty -- || true
+    - name: Resolve merge conflicts
+      run: |
+        for i in $(git diff --name-only --diff-filter=U --relative); do
+          git show :1:"$i" > ./tmp.common || true
+          git show :2:"$i" > ./tmp.ours
+          git show :3:"$i" > ./tmp.theirs
+          
+          git merge-file --ours -p ./tmp.ours ./tmp.common ./tmp.theirs > "$i"
+          git add "$i"
+          
+          rm ./tmp.{common,ours,theirs}
+        done
+    - name: Commit applied patches
+      run: git diff-index --quiet --cached HEAD || git commit -m "Apply patches from $REPO_PATCH" -m "Applied from https://github.com/$REPO_PATCH/tree/$BRANCH_PATCH"
+    - name: Remove template remotes
+      run: |
+        git remote remove template_base
+        git remote remove template_patch
+    - name: Check changes
+      id: check_changes
+      run: |
+        has_changes=$(git diff --exit-code --quiet HEAD origin/$BRANCH_UPDATE &> /dev/null && echo false || echo true)
+        echo "UPDATE_AVAILABLE=$has_changes" >> $GITHUB_OUTPUT
+    - name: Push changes
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      run: git push --set-upstream origin $BRANCH_UPDATE
+    - name: Create pull request
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      continue-on-error: true
+      run: |
+        gh pr reopen $BRANCH_UPDATE || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Apply patches from $REPO_PATCH" --body "Applied from https://github.com/$REPO_PATCH/tree/$BRANCH_PATCH"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
