@@ -34,9 +34,6 @@ set "currbr_file=.git\currbr"
 set "ignore_SHAs=ecb34d6 ec879ac 54ff7ab ec75cc7"
 
 
-set "hookmgr_path=scripts\hookmgr.bat"
-set "rebuild_script=scripts/hooks/rebuild.sh"
-
 set "refresh_env_path=scripts\refreshenv.bat"
 set "refresh_env_url=https://raw.githubusercontent.com/hampoelz/LaTeX-Template/main/scripts/refreshenv.bat"
 
@@ -287,12 +284,6 @@ exit
     echo              Update was successfully merged
     echo ========================================================
     echo.
-
-    :: add rebuild hooks
-    if exist "%hookmgr_path%" if exist "%rebuild_script%" (
-        call "%hookmgr_path%" add pre-push "bash %rebuild_script% --post_push" >nul
-        call "%hookmgr_path%" add post-commit "bash %rebuild_script% --post_commit" >nul
-    )
 
     :cleanup
     echo -------- cleanup ---------
