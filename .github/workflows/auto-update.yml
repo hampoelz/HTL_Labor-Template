@@ -9,37 +9,44 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  BRANCH_UPDATE: auto-update
+  IDENTITY_NAME: github-actions[bot]
+  IDENTITY_MAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
 jobs:
-  get_template:
-    name: Get Template Repository
+  get_parent:
+    name: Get Parent Repository
     runs-on: ubuntu-latest
     outputs:
-      repo: ${{ steps.parse_details.outputs.repo }}
-      branch: ${{ steps.parse_details.outputs.branch }}
+      url: ${{ steps.parse_url.outputs.parent_url }}
+      repo: ${{ steps.parse_details.outputs.parent_repo }}
+      branch: ${{ steps.parse_details.outputs.parent_branch }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Parse template url
+    - name: Parse parent url
+      id: parse_url
       run: |
-        template_url=$(git log -1 --grep='Merged from https://github.com/' | sed -n -e 's/\s*Merged from //p' | head -1 | cut -d' ' -f1)
-        echo "TEMPLATE_URL=$template_url" >> $GITHUB_ENV
-    - name: Parse template details
+        parent_url=$(git log -1 --grep='Merged from https://github.com/' | sed -n -e 's/\s*Merged from //p' | head -1 | cut -d' ' -f1)
+        echo "parent_url=$parent_url" >> $GITHUB_OUTPUT
+    - name: Parse parent details
       id: parse_details
-      if: ${{ env.TEMPLATE_URL != '' }}
+      if: steps.parse_url.outputs.parent_url != ''
       run: |
-        parent_repo=$(echo $TEMPLATE_URL | grep -o -P '(?<=https:\/\/github\.com\/).*(?=\/tree\/)')
-        parent_branch=$(echo $TEMPLATE_URL | grep -o -P '(?<=\/tree\/).*')
-        echo "::set-output name=repo::$parent_repo"
-        echo "::set-output name=branch::$parent_branch"
+        parent_repo=$(echo ${{ steps.parse_url.outputs.parent_url }} | grep -o -P '(?<=https:\/\/github\.com\/).*(?=\/tree\/)')
+        parent_branch=$(echo ${{ steps.parse_url.outputs.parent_url }} | grep -o -P '(?<=\/tree\/).*')
+        echo "parent_repo=$parent_repo" >> $GITHUB_OUTPUT
+        echo "parent_branch=$parent_branch" >> $GITHUB_OUTPUT
   update:
     name: Update Document
-    needs: [ get_template ]
-    if: |
-      needs.get_template.outputs.repo != '' &&
-      needs.get_template.outputs.branch != ''
+    needs: [ get_parent ]
     runs-on: ubuntu-latest
+    if: |
+      needs.get_parent.outputs.repo != '' &&
+      needs.get_parent.outputs.branch != ''
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -47,21 +54,29 @@ jobs:
         token: ${{ secrets.UPDATE_TOKEN == '' && secrets.GITHUB_TOKEN || secrets.UPDATE_TOKEN }}
         fetch-depth: 0
     - name: Create update branch
-      run: git switch auto-update 2>/dev/null || git switch -c auto-update
-    - name: Update document
-      if: ${{ env.PARENT_REPO != '' && env.PARENT_BRANCH != '' }}
+      run: git switch $BRANCH_UPDATE 2>/dev/null || git switch -c $BRANCH_UPDATE
+    - name: Setup git identity
       run: |
-        git config user.name github-actions[bot]
-        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        curl -s https://raw.githubusercontent.com/${{ needs.get_template.outputs.repo }}/${{ needs.get_template.outputs.branch }}/scripts/update.sh -o ../update.sh && bash ../update.sh && rm ../update.sh
+        git config user.name $IDENTITY_NAME
+        git config user.email $IDENTITY_MAIL
+    - name: Update document
+      run: |
+        curl -s https://raw.githubusercontent.com/${{ needs.get_parent.outputs.repo }}/${{ needs.get_parent.outputs.branch }}/scripts/update.sh -o ../update.sh
+        bash ../update.sh
+        rm ../update.sh
     - name: Check changes
-      run: echo "UPDATE_AVAILABLE=$(git diff --exit-code --quiet HEAD origin/main && echo false || echo true)" >> $GITHUB_ENV
+      id: check_changes
+      run: |
+        has_changes=$(git diff --exit-code --quiet HEAD origin/$BRANCH_UPDATE &> /dev/null && echo false || echo true)
+        echo "UPDATE_AVAILABLE=$has_changes" >> $GITHUB_OUTPUT
     - name: Push changes
-      run: git push --set-upstream origin auto-update
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
+      run: git push --set-upstream origin $BRANCH_UPDATE
     - name: Create pull request
+      if: steps.check_changes.outputs.UPDATE_AVAILABLE == 'true'
       continue-on-error: true
       run: |
-        gh pr reopen auto-update || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Merge changes from template" --body "Merged from $TEMPLATE_URL"
+        gh pr reopen $BRANCH_UPDATE || gh pr create --base main --title "chore: :twisted_rightwards_arrows: Merge changes from template" --body "Merged from https://github.com/${{ needs.get_parent.outputs.repo }}/tree/${{ needs.get_parent.outputs.branch }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   get_document_template:
