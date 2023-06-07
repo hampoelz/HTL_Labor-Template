@@ -87,7 +87,7 @@ jobs:
     - name: Check release tag
       id: check_tag
       if: github.event_name != 'pull_request'
-      run: echo "::set-output name=build_tag::$(git tag -l build)"
+      run: echo "build_tag=$(git tag -l build)" >> $GITHUB_OUTPUT
     - name: Release artifacts
       uses: softprops/action-gh-release@v1
       if: ${{ steps.check_tag.outputs.build_tag == 'build' }}
