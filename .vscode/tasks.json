@@ -22,6 +22,27 @@
             "problemMatcher": []
         },
         {
+            "label": "Archive",
+            "type": "shell",
+            "command": "zip -r LaTeXDocument.zip .",
+            "windows": {
+                "command": "C:\\Windows\\System32\\tar.exe -a -cf LaTeXDocument.zip *"
+            },
+            "dependsOn": [
+                "Clean"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "never",
+                "showReuseMessage": false,
+                "close": true,
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Update Template",
             "type": "shell",
             "command": "./scripts/update.sh",
