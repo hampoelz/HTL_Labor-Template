@@ -314,3 +314,6 @@ tmp/
 
 # compiled files
 out/
+
+# archived document
+LaTeXDocument.zip
