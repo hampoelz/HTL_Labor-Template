@@ -68,9 +68,12 @@
 % ------------ toc pagebreak -------------
 \newcommand{\tocbreak}{\addtocontents{toc}{\protect\pagebreak}}
 
-% ------------ highlight text ------------
-\usepackage{xcolor}
-\newcommand{\hl}[1]{\colorbox[HTML]{FBF719}{#1}}
+% - underline/strikethrough/highlight text -
+\usepackage{luacolor}
+\usepackage{lua-ul}
+\newcommand{\ul}[1]{\underLine{#1}}
+\newcommand{\st}[1]{\strikeThrough{#1}}
+\newcommand{\hl}[1]{\highLight{#1}}
 
 % --- align columns with custom width ----
 \usepackage{array}
@@ -117,3 +120,33 @@
 %     #1
 %     \end{tcolorbox}%
 % }
+
+% ------------- alert boxes --------------
+\usepackage[most]{tcolorbox}
+\usepackage{fontawesome}
+\newenvironment{alertbox}[2]{
+    \begin{tcolorbox}[%
+        enhanced,%
+        frame hidden,%
+        colback=white,%
+        borderline west={3px}{0pt}{#1}%
+    ]
+        {\large\color{#1}\textbf{#2}}
+        \\[0.5em]
+}{
+    \end{tcolorbox}
+}
+
+\newenvironment{alerticonbox}[3]{\begin{alertbox}{#1}{#2\hspace{1ex}#3}}{\end{alertbox}}
+
+% - alert box "note" -
+\definecolor{note}{HTML}{0969da}
+\newenvironment{note}[1][Note]{\begin{alerticonbox}{note}{\faInfoCircle}{#1}}{\end{alerticonbox}}
+
+% - alert box "important" -
+\definecolor{important}{HTML}{8250df}
+\newenvironment{important}[1][Important]{\begin{alerticonbox}{important}{\faExclamation}{#1}}{\end{alerticonbox}}
+
+% - alert box "warning" -
+\definecolor{warning}{HTML}{9a6700}
+\newenvironment{warning}[1][Warning]{\begin{alerticonbox}{warning}{\faExclamationTriangle}{#1}}{\end{alerticonbox}}
